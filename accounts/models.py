@@ -34,7 +34,7 @@ class Usuario(AbstractUser):
 class Condutor(models.Model):
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     nota_media = models.FloatField()
-    CNH = models.IntegerField()
+    CNH = models.CharField(max_length=11)
     
     def __str__(self):
         return f'"{self.id}" - {self.usuario}'

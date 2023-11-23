@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Criar Condutor
+{% endblock title %}
+
+{% block content %}
+<h2>Insira sua CNH</h2>
+
+<form method="post" action="{% url 'accounts:condutor' user.id %}">
+  {% csrf_token %}
+    <p>
+        <label for="id_CNH">CNH:</label>
+        <input type="text" name="CNH" id="id_CNH" maxlength='11' />
+      </p>
+    <button type="submit">Criar</button>
+</form>
+
+{% endblock content %} 

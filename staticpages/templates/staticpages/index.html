@@ -7,4 +7,7 @@ Página Inicial
 {% block content %}
 <h1><i>Caronusp</i></h1>
 <p>A sua corrida diária!</p>
+{% if user.is_authenticated %}
+<li><a href="{% url 'accounts:afterlogin' user.id%}">Login de condutor ou passageiro</a></li>
+{% endif %}
 {% endblock content %}

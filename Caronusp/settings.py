@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'staticpages.apps.StaticpagesConfig',
     'accounts.apps.AccountsConfig',
+    'condutor.apps.CondutorConfig',
+    'passageiro.apps.PassageiroConfig',
 ]
 
 MIDDLEWARE = [
