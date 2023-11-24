@@ -3,6 +3,7 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.contrib.auth.forms import UserCreationForm
 from accounts.models import Usuario, Condutor, Passageiro
+from django.contrib.auth.decorators import login_required
 
 class UsuarioCreationForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
@@ -21,14 +22,11 @@ def signup(request):
     context = {'form': form}
     return render(request, 'accounts/signup.html', context)
 
+@login_required
 def afterlogin(request, usuario_id):
     usuario = get_object_or_404(Usuario, pk=usuario_id)
     context = {'usuario': usuario}
     return render(request, 'registration/afterlogin.html', context)
-
-def gosignCondutor(request, usuario_id):
-    context = {'usuario_id': usuario_id}
-    return render(request, 'accounts/signcondutor.html', context)
 
 def signCondutor(request, usuario_id):
     usuario = get_object_or_404(Usuario, pk=usuario_id)
@@ -41,7 +39,7 @@ def signCondutor(request, usuario_id):
             reverse('condutor:initial', args=(usuario.id, )))
         
     context = {'usuario': usuario}
-    return render(request, 'registration/afterlogin.html', context)
+    return render(request, 'accounts/signcondutor.html', context)
     
 def signPassageiro(request, usuario_id):
     usuario = get_object_or_404(Usuario, pk=usuario_id)
@@ -52,7 +50,6 @@ def signPassageiro(request, usuario_id):
         passageiro.save()
         return HttpResponseRedirect(
             reverse('passageiro:initial', args=(usuario.id, )))
-        
     context = {'usuario': usuario}
     return render(request, 'registration/afterlogin.html', context)
     

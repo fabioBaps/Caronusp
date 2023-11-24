@@ -3,7 +3,7 @@
 {% if user.is_condutor %}
     <li><a href="{% url 'condutor:initial' user.id%}">Logar como condutor</a></li>
 {% else %}
-    <li><a href="{% url 'accounts:signcondutor' user.id%}">Cadastrar condutor</a></li>
+    <li><a href="{% url 'accounts:condutor' user.id%}">Cadastrar condutor</a></li>
 {% endif %}
 {% if user.is_passageiro %}
     <li><a href="{% url 'passageiro:initial' user.id%}">Logar como passageiro</a></li>
