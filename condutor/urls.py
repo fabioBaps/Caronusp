@@ -6,4 +6,7 @@ app_name = 'condutor'
 
 urlpatterns = [
     path('<int:usuario_id>', views.initial, name='initial'),
+    path('<int:usuario_id>/create_carona', views.create_carona, name='create_carona'),
+    path('<int:usuario_id>/carona/<int:carona_id>', views.detail_carona, name='detail_carona'),
+    path('<int:usuario_id>/carona/<int:carona_id>/edit', views.edit_carona, name='edit_carona'),
 ]

@@ -1,0 +1,15 @@
+<h2>
+  Local de partida {{ carona.local_partida }}  
+  <br>
+  Horario de partida {{carona.horario_partida}}
+  <br>
+  Local de chegada {{ carona.local_chegada }}  
+  <br>
+  Horario de chegada {{carona.horario_chegada}}
+  <br>
+  Placa {{carona.placa_veiculo}}
+  <br>
+</h2>
+<button><a href="{% url 'condutor:edit_carona' user.id carona.id %}">Editar carona</a></button>
+<button><a href="{% url 'condutor:initial' user.id %}">Voltar</a></button>
+

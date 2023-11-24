@@ -1,0 +1,31 @@
+{% block content %}
+<h2>Atualizar dados da carona</h2>
+<form method="post" action="{% url 'condutor:edit_carona' user.id carona.id%}">
+  {% csrf_token %}
+  <p>
+      <label for="id_local_partida">Local de partida:</label>
+      <input type="text" name="local_partida" id="id_local_partida" value="{{carona.local_partida}}"/>
+  </p>
+  <p>
+      <label for="id_horario_partida">Horário de partida:</label>
+      <input type="text" name="horario_partida" id="id_horario_partida" value="{{carona.horario_partida}}"/>
+  </p>
+  <p>
+      <label for="id_local_chegada">Local de chegada:</label>
+      <input type="text" name="local_chegada" id="id_local_chegada" value="{{carona.local_chegada}}"/>
+  </p>
+  <p>
+      <label for="id_horario_chegada">Horário de chegada:</label>
+      <input type="text" name="horario_chegada" id="id_horario_chegada" value="{{carona.horario_chegada}}"/>
+  </p>
+  <p>
+      <label for="id_placa">placa do carro:</label>
+      <input type="text" name="placa" id="id_placa" value="{{carona.placa_veiculo}}"/>
+  </p>
+    
+  
+  <button><a href="{% url 'condutor:detail_carona' user.id carona.id%}">Cancelar</a></button>
+  <button type="submit">Salvar alterações</button>
+</form>
+
+{% endblock content %}
