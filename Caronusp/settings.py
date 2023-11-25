@@ -118,6 +118,8 @@ USE_I18N = True
 
 USE_TZ = True
 
+BASE_COUNTRY = 'BR'
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
