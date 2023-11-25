@@ -7,11 +7,11 @@ from accounts.models import Usuario, Condutor, Passageiro
 class UsuarioCreationForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
         model = Usuario
-        fields = UserCreationForm.Meta.fields + ('telefone', 'RG')
+        fields = UserCreationForm.Meta.fields + ('telefone', 'RG', 'email', 'foto')
 
 def signup(request):
     if request.method == 'POST':
-        form = UsuarioCreationForm(request.POST)
+        form = UsuarioCreationForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
             return HttpResponseRedirect(reverse('index'))
