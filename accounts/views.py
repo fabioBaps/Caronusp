@@ -1,8 +1,10 @@
 from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponseRedirect
-from django.urls import reverse
+from django.http import HttpResponseRedirect, HttpResponse
+from django.urls import reverse, reverse_lazy
 from django.contrib.auth.forms import UserCreationForm
 from accounts.models import Usuario, Condutor, Passageiro
+from django.contrib.auth import authenticate, login
+
 
 class UsuarioCreationForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
@@ -56,4 +58,7 @@ def signPassageiro(request, usuario_id):
     context = {'usuario': usuario}
     return render(request, 'registration/afterlogin.html', context)
     
+def my_view(request):
+    usuario = request.user
+    return HttpResponseRedirect(reverse_lazy('accounts:afterlogin', args=(usuario.id, ))) 
     

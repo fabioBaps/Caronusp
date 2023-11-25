@@ -10,4 +10,5 @@ urlpatterns = [
     path('sign/condutor/<int:usuario_id>', views.gosignCondutor, name='signcondutor'),
     path('signup/condutor/<int:usuario_id>/', views.signCondutor, name='condutor'),
     path('signup/passageiro/<int:usuario_id>/', views.signPassageiro, name='passageiro'),
+    path('loginredirect/', views.my_view, name='loginredirect')
 ]
