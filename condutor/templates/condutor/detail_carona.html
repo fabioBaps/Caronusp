@@ -1,4 +1,5 @@
-<h2>
+<h1> Carona </h1>
+<h3>
   Local de partida {{ carona.local_partida }}  
   <br>
   Horario de partida {{carona.horario_partida}}
@@ -9,7 +10,30 @@
   <br>
   Placa {{carona.placa_veiculo}}
   <br>
-</h2>
-<button><a href="{% url 'condutor:edit_carona' user.id carona.id %}">Editar carona</a></button>
-<button><a href="{% url 'condutor:initial' user.id %}">Voltar</a></button>
+</h3>
+<button><a href="{% url 'condutor:edit_carona' user.id carona.id %}">Editar detalhes da carona</a></button>
+<br>
+<button><a href="{% url 'condutor:initial' user.id %}">Voltar para tela inicial</a></button>
+<br>
+<button><a href="{% url 'condutor:create_corrida' user.id carona.id %}">Criar nova corrida nesta carona</a></button>
 
+<h1> Corridas ativas dessa carona </h1>
+
+{% for info_corrida in info_corridas_passageiros %}
+<h2>corrida do dia {{ info_corrida.corrida.dia }} </h2>
+
+<button><a href="{% url 'condutor:delete_corrida' user.id info_corrida.corrida.id %}">Cancelar corrida</a></button>
+
+{% if info_corrida.passageiros_aceitos %}
+<p>Passageiros aceitos: {{info_corrida.passageiros_aceitos}}</p>
+{% else %}
+<p>Sem passageiros</p>
+{% endif %}
+
+{% if info_corrida.passageiros_a_aceitar %}
+<p>Passageiros solicitando entrada: {{info_corrida.passageiros_a_aceitar}}</p>
+{% else %}
+<p>Sem solicitações</p>
+{% endif %}
+
+{% endfor %}

@@ -1,0 +1,11 @@
+<form method="POST" action="{% url 'condutor:delete_corrida' user.id corrida.id %}">
+  {% csrf_token %}
+  <p>
+    Confirmar - Deletar a corrida do dia {{corrida.dia}}?
+  </p>
+  <p>
+    <label for="deletar"><input type="checkbox" id="deletar" name="deletar" required> Sim, desejo deletar</label>
+  </p>
+  <button type="submit">Executar</button>
+</form>
+<button><a href="{% url 'condutor:detail_carona' user.id corrida.carona.id%}">Voltar para tela da carona</a></button>

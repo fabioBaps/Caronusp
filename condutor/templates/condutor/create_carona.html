@@ -49,6 +49,7 @@
   function addDayFields() {
       const num_corridas = document.getElementById('num_corridas').value;
       const diasFields = document.getElementById('diasFields');
+      const hoje = new Date().toISOString().split('T')[0]
 
       // Limpar campos antigos
       diasFields.innerHTML = '';
@@ -61,6 +62,7 @@
           const input = document.createElement('input');
           input.type = 'date';
           input.name = `day_${i}`;
+          input.min = hoje;
 
           const lineBreak = document.createElement('br');
 
