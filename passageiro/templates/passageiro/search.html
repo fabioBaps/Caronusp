@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Busca de corridas</h2>
+<form action="{% url 'passageiro:search' user.id %}" method="get">
+    <p>
+        <label for="id_query">Dia:</label>
+        <input type="date" name="query" id="id_query" />
+    </p>
+    <button type="submit">Buscar</button>
+</form>
+
+
+
+<h2>Resultado da busca</h2>
+{% if corrida_list %}
+<section>
+    {% for corrida in corrida_list %}
+    <article>
+        <p>{{ corrida.dia }} ({{ corrida.vagas }})</p>
+    </article>
+    {% endfor %}
+</section>
+{% else %}
+    <p>Não foi encontrada nenhuma corrida para a busca.</p>
+{% endif %}
+
+{% endblock content %}
