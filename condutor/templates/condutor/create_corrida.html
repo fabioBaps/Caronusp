@@ -1,0 +1,11 @@
+<form method="POST" action="{% url 'condutor:create_corrida' user.id carona.id %}">
+  {% csrf_token %}
+  <label for="dia">Selecione o dia da nova corrida:</label>
+  <input type="date" id="dia" name="dia" min="{{ hoje }}" required>
+  <button type="submit">Executar</button>
+</form>
+<button><a href="{% url 'condutor:detail_carona' user.id carona.id%}">Voltar para tela da carona</a></button>
+<script>
+  var hoje = new Date().toISOString().split('T')[0];
+  document.getElementById("dia").min = hoje;
+</script>

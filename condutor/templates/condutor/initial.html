@@ -1,3 +1,10 @@
 <h1>Condutorrrrrrrr</h1>
 <p>{{ user.username }}</p>
 <p>{{ user.id }}</p>
+<button><a href="{% url 'condutor:create_carona' user.id %}">Criar carona</a></button>
+
+<h1>Minhas caronas</h1>
+{% for carona in caronas %}
+<p>Carona saindo de {{ carona.local_partida }} as {{carona.horario_partida}}</p>
+<button><a href="{% url 'condutor:detail_carona' user.id carona.id %}">Detalhes</a></button>
+{% endfor %}

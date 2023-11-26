@@ -1,0 +1,80 @@
+{% block content %}
+<h2>Publicar carona</h2>
+<form method="post" action="{% url 'condutor:create_carona' user.id%}">
+  {% csrf_token %}
+    <p>
+        <label for="id_local_partida">Local de partida:</label>
+        <input type="text" name="local_partida" id="id_local_partida" />
+    </p>
+    <p>
+        <label for="id_horario_partida">Horário de partida:</label>
+        <input type="text" name="horario_partida" id="id_horario_partida" />
+    </p>
+    <p>
+        <label for="id_local_chegada">Local de chegada:</label>
+        <input type="text" name="local_chegada" id="id_local_chegada" />
+    </p>
+    <p>
+        <label for="id_horario_chegada">Horário de chegada:</label>
+        <input type="text" name="horario_chegada" id="id_horario_chegada" />
+    </p>
+    <p>
+        <label for="id_vagas">Vagas disponíveis no carro:</label>
+        <input type="number" name="vagas" id="id_vagas" />
+    </p>
+    <p>
+        <label for="id_placa">placa do carro:</label>
+        <input type="text" name="placa" id="id_placa" />
+    </p>
+    <p>
+        <label for="num_corridas">Número de corridas:</label>
+        <input type="number" id="num_corridas" name="num_corridas" min="1" required onchange="addDayFields()">
+    </p>
+    <p>
+      <div id="diasFields" class="hidden">
+        <p>
+          <label for="dias"></label>
+        </p>
+        <br>
+      </div>
+    </p>
+      
+
+  <button><a href="{% url 'condutor:initial' user.id%}">Cancelar</a></button>
+  <button type="submit">Criar</button>
+</form>
+
+
+<script>
+  function addDayFields() {
+      const num_corridas = document.getElementById('num_corridas').value;
+      const diasFields = document.getElementById('diasFields');
+      const hoje = new Date().toISOString().split('T')[0]
+
+      // Limpar campos antigos
+      diasFields.innerHTML = '';
+
+      // Adicionar novos campos com base no número de dias
+      for (let i = 1; i <= num_corridas; i++) {
+          const label = document.createElement('label');
+          label.textContent = `Dia da corrida ${i}: `;
+
+          const input = document.createElement('input');
+          input.type = 'date';
+          input.name = `day_${i}`;
+          input.min = hoje;
+
+          const lineBreak = document.createElement('br');
+
+          // Adicionar os elementos ao formulário
+          diasFields.appendChild(label);
+          diasFields.appendChild(input);
+          diasFields.appendChild(lineBreak);
+      }
+
+      // Mostrar os campos
+      diasFields.classList.remove('hidden');
+  }
+</script>
+
+{% endblock content %}
