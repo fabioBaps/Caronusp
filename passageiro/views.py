@@ -3,6 +3,7 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 from accounts.models import Usuario,Passageiro, Corrida, Passageiros_corrida
 from django.contrib.auth.decorators import login_required
+import googlemaps
 
 @login_required
 def initial(request, usuario_id):

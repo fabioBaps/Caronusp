@@ -118,6 +118,8 @@ USE_I18N = True
 
 USE_TZ = True
 
+BASE_COUNTRY = 'BR'
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
@@ -131,6 +133,6 @@ STATICFILES_DIRS = [ os.path.join(BASE_DIR, 'static'), ]
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-LOGIN_REDIRECT_URL = 'index'
+LOGIN_REDIRECT_URL = '/accounts/loginredirect'
 LOGOUT_REDIRECT_URL = 'index'
 LOGIN_URL = 'login'

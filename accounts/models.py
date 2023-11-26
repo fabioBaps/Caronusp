@@ -26,7 +26,7 @@ class UsuarioManager(BaseUserManager):
 class Usuario(AbstractUser):
     telefone = models.CharField(max_length=11)
     RG = models.CharField(max_length=9)
-    foto = models.ImageField()
+    foto = models.ImageField(upload_to="uploads/")
     is_condutor = models.BooleanField(default=False)
     is_passageiro = models.BooleanField(default=False)
     objects = UsuarioManager()
