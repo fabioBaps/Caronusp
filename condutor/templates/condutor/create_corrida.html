@@ -1,3 +1,6 @@
+{% extends 'base.html' %}
+{% block content %}
+
 <form method="POST" action="{% url 'condutor:create_corrida' user.id carona.id %}">
   {% csrf_token %}
   <label for="dia">Selecione o dia da nova corrida:</label>
@@ -9,3 +12,5 @@
   var hoje = new Date().toISOString().split('T')[0];
   document.getElementById("dia").min = hoje;
 </script>
+
+{% endblock content %}

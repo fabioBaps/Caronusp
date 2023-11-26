@@ -1,3 +1,6 @@
+{% extends 'base.html' %}
+{% block content %}
+
 <form method="POST" action="{% url 'condutor:delete_corrida' user.id corrida.id %}">
   {% csrf_token %}
   <p>
@@ -9,3 +12,5 @@
   <button type="submit">Executar</button>
 </form>
 <button><a href="{% url 'condutor:detail_carona' user.id corrida.carona.id%}">Voltar para tela da carona</a></button>
+
+{% endblock content %}

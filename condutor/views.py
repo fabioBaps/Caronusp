@@ -48,11 +48,12 @@ def get_passageiros(corrida):
     passageiros_aceitos = []
     passageiros_a_aceitar = []
     for passageiro in passageiros_da_corrida:
-        passageiro_i = Passageiro.objects.filter(pk=passageiro.passageiro)
-        if passageiro_i.aceito:
+        passageiro_i = get_object_or_404(Passageiro, pk=passageiro.passageiro.id)
+        if passageiro.aceito == True:
             passageiros_aceitos.append(passageiro_i)
-        else:
+        elif passageiro.aceito != False:
             passageiros_a_aceitar.append(passageiro_i)
+        # else = passageiro rejeitado
     return {
         'corrida':corrida,
         'passageiros_a_aceitar':passageiros_a_aceitar,
@@ -107,4 +108,24 @@ def create_corrida(request, usuario_id, carona_id):
     context = {'carona':carona}
     return render(request, 'condutor/create_corrida.html', context)
     
+def aceitar_passageiro_corrida(request, usuario_id, corrida_id, passageiro_id):
+    passageiro_corrida = Passageiros_corrida.objects.filter(corrida=corrida_id, passageiro=passageiro_id)[0]
+    passageiro_corrida.aceito = True
+    passageiro_corrida.save()
+    corrida = get_object_or_404(Corrida, pk=corrida_id)
+    carona = get_object_or_404(Carona, pk=corrida.carona.id)
+    corridas = Corrida.objects.filter(carona=carona, ativa=True)
+    info_corridas_passageiros = [get_passageiros(corrida_) for corrida_ in corridas]
+    context = {'usuario_id': usuario_id, 'carona':carona, 'info_corridas_passageiros':info_corridas_passageiros}
+    return render(request, 'condutor/detail_carona.html', context)
 
+def rejeitar_passageiro_corrida(request, usuario_id, corrida_id, passageiro_id):
+    passageiro_corrida = Passageiros_corrida.objects.filter(corrida=corrida_id, passageiro=passageiro_id)[0]
+    passageiro_corrida.aceito = False
+    passageiro_corrida.save()
+    corrida = get_object_or_404(Corrida, pk=corrida_id)
+    carona = get_object_or_404(Carona, pk=corrida.carona.id)
+    corridas = Corrida.objects.filter(carona=carona, ativa=True)
+    info_corridas_passageiros = [get_passageiros(corrida_) for corrida_ in corridas]
+    context = {'usuario_id': usuario_id, 'carona':carona, 'info_corridas_passageiros':info_corridas_passageiros}
+    return render(request, 'condutor/detail_carona.html', context)
