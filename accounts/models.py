@@ -70,7 +70,7 @@ class Corrida(models.Model):
 class Passageiros_corrida(models.Model):
     passageiro = models.ForeignKey(Passageiro, on_delete=models.CASCADE)
     corrida = models.ForeignKey(Corrida, on_delete=models.CASCADE)
-    aceito = models.BooleanField()
+    aceito = models.BooleanField(null=True)
 
     def __str__(self):
         return f'"{self.id}" - {self.passageiro} - {self.corrida} - {self.aceito}'

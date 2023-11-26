@@ -1,11 +1,12 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<a href="{% url 'passageiro:initial' user.id %}">< Voltar</a>
 <h2>Busca de corridas</h2>
 <form action="{% url 'passageiro:search' user.id %}" method="get">
     <p>
         <label for="id_query">Dia:</label>
-        <input type="date" name="query" id="id_query" />
+        <input type="date" name="query" id="id_query" min="{% now "Y-m-d" %}" />
     </p>
     <button type="submit">Buscar</button>
 </form>
@@ -17,7 +18,15 @@
 <section>
     {% for corrida in corrida_list %}
     <article>
-        <p>{{ corrida.dia }} ({{ corrida.vagas }})</p>
+        <p>{{ corrida.id }}: {{ corrida.dia }} ({{ corrida.vagas }})</p>
+        <form method="post" action="{% url 'passageiro:request' user.id corrida.id%}">
+            {% csrf_token %}
+            <button
+            {% if corrida.exists %}disabled{% endif %}
+            {% if not corrida.exists %}type="submit"{% endif %}>
+            {{corrida.title}}
+            </button>
+        </form>
     </article>
     {% endfor %}
 </section>
