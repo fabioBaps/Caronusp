@@ -2,10 +2,10 @@
 <h2>Atualizar dados do perfil</h2>
 <form method="post" action="{% url 'passageiro:edit' usuario.id%}">
   {% csrf_token %}
-    {% comment %} <p>
+    <p>
     <label for="id_foto">Foto:</label>
     <input type="image" name="foto" id="id_foto" value="{{usuario.foto}}" />
-    </p> {% endcomment %}
+    </p>
     <p>
         <label for="id_username">Nome de usuário:</label>
         <input type="text" name="username" id="id_username" value="{{usuario.username}}" />

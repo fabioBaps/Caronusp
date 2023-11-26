@@ -48,8 +48,12 @@ class Passageiro(models.Model):
     
 class Carona(models.Model):
     condutor = models.ForeignKey(Condutor, on_delete=models.CASCADE)
-    local_partida = models.CharField(max_length=100)
-    local_chegada = models.CharField(max_length=100)
+    local_partida = models.TextField()
+    endereco_partida = models.TextField()
+    placeId_partida = models.TextField()
+    local_chegada = models.TextField()
+    endereco_chegada = models.TextField()
+    placeId_chegada = models.TextField()
     horario_partida = models.TimeField()
     horario_chegada = models.TimeField()
     lugares = models.IntegerField()
@@ -96,9 +100,18 @@ class Avaliacao_Passageiro(models.Model):
 class Mensagem(models.Model):
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     corrida = models.ForeignKey(Corrida, on_delete=models.CASCADE)
-    texto = models.CharField(max_length=100)
-    hora = models.DateTimeField()
+    texto = models.TextField()
+    hora = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f'"{self.id}" - {self.usuario} - {self.corrida} - {self.texto} - {self.hora}'
     
+class Notificacao(models.Model):
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+    corrida = models.ForeignKey(Corrida, on_delete=models.CASCADE)
+    texto = models.TextField()
+    hora = models.DateTimeField(auto_now_add=True)
+    visto = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f'"{self.id}" - {self.usuario} - {self.corrida} - {self.texto} - {self.hora}'

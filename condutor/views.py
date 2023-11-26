@@ -79,7 +79,9 @@ def edit_carona(request, usuario_id, carona_id):
         return HttpResponseRedirect(
             reverse('condutor:detail_carona', args=(usuario_id, carona_id )))
     corridas = Corrida.objects.filter(carona=carona)
-    context = {'usuario_id': usuario_id, 'carona':carona,'corridas':corridas}
+    horario_partida_formatado = str(carona.horario_partida).split(':00')[0]
+    horario_chegada_formatado = str(carona.horario_chegada).split(':00')[0]
+    context = {'usuario_id': usuario_id, 'carona':carona,'corridas':corridas,'horario_partida_formatado':horario_partida_formatado,'horario_chegada_formatado':horario_chegada_formatado}
     return render(request, 'condutor/edit_carona.html', context)
 
 def delete_corrida(request, usuario_id, corrida_id):

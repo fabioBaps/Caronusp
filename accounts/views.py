@@ -10,7 +10,7 @@ from django.contrib.auth.decorators import login_required
 class UsuarioCreationForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
         model = Usuario
-        fields = UserCreationForm.Meta.fields + ('telefone', 'RG', 'email', 'foto')
+        fields = UserCreationForm.Meta.fields + ('first_name','last_name','telefone', 'RG', 'email', 'foto')
 
 def signup(request):
     if request.method == 'POST':
