@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     'accounts.apps.AccountsConfig',
     'condutor.apps.CondutorConfig',
     'passageiro.apps.PassageiroConfig',
+    'chat.apps.ChatConfig',
+
 ]
 
 MIDDLEWARE = [
