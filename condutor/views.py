@@ -4,6 +4,8 @@ from django.urls import reverse
 from accounts.models import Usuario, Condutor, Carona, Corrida, Passageiros_corrida, Passageiro, Avaliacao_Passageiro
 from django.contrib.auth.decorators import login_required
 import googlemaps
+from _env import GOOGLE_API_KEY
+import requests
 import numpy as np
 
 
@@ -21,8 +23,30 @@ def create_carona(request, usuario_id):
     if request.method == "POST":
         carona_dict = {}
         carona_dict['condutor'] = condutor
-        carona_dict['local_chegada'] = request.POST['local_chegada']
-        carona_dict['local_partida'] = request.POST['local_partida']
+
+        api_key = GOOGLE_API_KEY
+        chegada = request.POST['local_chegada']
+        chegada_url = f"https://maps.googleapis.com/maps/api/place/textsearch/json?query={chegada}&key={api_key}"
+        chegada_response = requests.get(chegada_url)
+        chegada_data = chegada_response.json()
+        chegada_result = chegada_data.get('results', [])
+        if chegada_result:
+            top_chegada = chegada_result[0]
+            carona_dict['endereco_chegada'] = top_chegada.get('formatted_address', '')
+            carona_dict['placeId_chegada'] = top_chegada.get('place_id', '')
+            carona_dict['local_chegada'] = chegada
+
+        partida = request.POST['local_partida']
+        partida_url = f"https://maps.googleapis.com/maps/api/place/textsearch/json?query={partida}&key={api_key}"
+        partida_response = requests.get(partida_url)
+        partida_data = partida_response.json()
+        partida_result = partida_data.get('results', [])
+        if partida_result:
+            top_partida = partida_result[0]
+            carona_dict['endereco_partida'] = top_partida.get('formatted_address', '')
+            carona_dict['placeId_partida'] = top_partida.get('place_id', '')
+            carona_dict['local_partida'] = partida
+
         carona_dict['horario_chegada'] = request.POST['horario_chegada']
         carona_dict['horario_partida'] = request.POST['horario_partida']
         carona_dict['lugares'] = request.POST['vagas']
@@ -72,8 +96,29 @@ def detail_carona(request, usuario_id, carona_id):
 def edit_carona(request, usuario_id, carona_id):
     carona = get_object_or_404(Carona, pk=carona_id)
     if request.method == "POST":
-        carona.local_chegada = request.POST['local_chegada']
-        carona.local_partida = request.POST['local_partida']
+        api_key = GOOGLE_API_KEY
+        chegada = request.POST['local_chegada']
+        chegada_url = f"https://maps.googleapis.com/maps/api/place/textsearch/json?query={chegada}&key={api_key}"
+        chegada_response = requests.get(chegada_url)
+        chegada_data = chegada_response.json()
+        chegada_result = chegada_data.get('results', [])
+        if chegada_result:
+            top_chegada = chegada_result[0]
+            carona.endereco_chegada = top_chegada.get('formatted_address', '')
+            carona.placeId_chegada = top_chegada.get('place_id', '')
+            carona.local_chegada = chegada
+
+        partida = request.POST['local_partida']
+        partida_url = f"https://maps.googleapis.com/maps/api/place/textsearch/json?query={partida}&key={api_key}"
+        partida_response = requests.get(partida_url)
+        partida_data = partida_response.json()
+        partida_result = partida_data.get('results', [])
+        if partida_result:
+            top_partida = partida_result[0]
+            carona.endereco_partida = top_partida.get('formatted_address', '')
+            carona.placeId_partida = top_partida.get('place_id', '')
+            carona.local_partida = partida
+
         carona.horario_chegada = request.POST['horario_chegada']
         carona.horario_partida = request.POST['horario_partida']
         carona.placa_veiculo = request.POST['placa']

@@ -3,10 +3,23 @@
 {% block content %}
 <a href="{% url 'passageiro:initial' user.id %}">< Voltar</a>
 <h2>Busca de corridas</h2>
-<form action="{% url 'passageiro:search' user.id %}" method="get">
+<form action="{% url 'passageiro:search' user.id %}" method="post">
+    {% csrf_token %}
     <p>
-        <label for="id_query">Dia:</label>
-        <input type="date" name="query" id="id_query" min="{% now "Y-m-d" %}" />
+        <label for="id_dia">Dia:</label>
+        <input type="date" name="dia" id="id_dia" min="{% now "Y-m-d" %}" />
+    </p>
+    <p>
+        <label for="id_local_partida">Local de partida:</label>
+        <input type="text" name="local_partida" id="id_local_partida" />
+    </p>
+    <p>
+        <label for="id_local_chegada">Local de chegada:</label>
+        <input type="text" name="local_chegada" id="id_local_chegada" />
+    </p>
+    <p>
+        <label for="id_horario_chegada">Horário de chegada:</label>
+        <input type="time" name="horario_chegada" id="id_horario_chegada" />
     </p>
     <button type="submit">Buscar</button>
 </form>
@@ -18,7 +31,8 @@
 <section>
     {% for corrida in corrida_list %}
     <article>
-        <p>{{ corrida.id }}: {{ corrida.dia }} ({{ corrida.vagas }})</p>
+        <p>{{ corrida.id }}: {{ corrida.dia }} {{ corrida.carona.local_partida }} ({{ corrida.carona.horario_partida }})
+             para {{ corrida.carona.local_chegada }} ({{ corrida.carona.horario_chegada }}) : Vagas {{ corrida.vagas }}</p>
         <a href="{% url 'passageiro:detail' user.id corrida.id %}">Ver detalhes</a>
         <form method="post" action="{% url 'passageiro:request' user.id corrida.id%}">
             {% csrf_token %}
