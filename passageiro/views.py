@@ -1,9 +1,11 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
 from django.urls import reverse
-from accounts.models import Usuario,Passageiro, Corrida, Passageiros_corrida
+from accounts.models import Usuario,Passageiro, Corrida, Passageiros_corrida, Carona
 from django.contrib.auth.decorators import login_required
 import googlemaps
+from _env import GOOGLE_API_KEY
+import requests
 
 @login_required
 def initial(request, usuario_id):
@@ -45,12 +47,66 @@ def Search_RequestView(request, usuario_id, corrida_id=None):
     if usuario.is_passageiro and usuario.id == user.id:
         passageiro = Passageiro.objects.filter(usuario_id=usuario.id)[0]
         context = {}
-        if request.GET.get('query', False):
-            search_term = request.GET['query'].lower()
+        if request.method == 'POST':
+            api_key = GOOGLE_API_KEY
+            chegada = request.POST.get('local_chegada')
+            chegada_url = f"https://maps.googleapis.com/maps/api/place/textsearch/json?query={chegada}&key={api_key}"
+            chegada_response = requests.get(chegada_url)
+            chegada_data = chegada_response.json()
+            chegada_result = chegada_data.get('results', [])
+            if chegada_result:
+                top_chegada = chegada_result[0]
+                id_chegada = top_chegada['formatted_address']
+
+            partida = request.POST.get('local_partida')
+            partida_url = f"https://maps.googleapis.com/maps/api/place/textsearch/json?query={partida}&key={api_key}"
+            partida_response = requests.get(partida_url)
+            partida_data = partida_response.json()
+            partida_result = partida_data.get('results', [])
+            if partida_result:
+                top_partida = partida_result[0]
+                id_partida = top_partida['formatted_address']
+
+            caronas = Carona.objects.all()
+
+            chegadas_ids = [carona.endereco_chegada for carona in caronas]
+            print(chegadas_ids)
+
+            gmaps = googlemaps.Client(key=GOOGLE_API_KEY)
+
+            chegadas_dm = gmaps.distance_matrix(id_chegada, chegadas_ids, units='metric')
+
+            if 'rows' in chegadas_dm and 'elements' in chegadas_dm['rows'][0]:
+                chegadas_dict = {}
+                elements = chegadas_dm['rows'][0]['elements']
+                for i, carona in enumerate(caronas):
+                    distance = elements[i].get('distance', {})
+                    # Convert the distance from meters to kilometers
+                    distance_num = distance.get('value', float('inf')) / 1000
+                    chegadas_dict[carona] = distance_num
+                
+                caronas = [carona for carona in caronas if chegadas_dict[carona]<=5]
+            
+            partidas_ids = [carona.endereco_partida for carona in caronas]
+            partidas_dm = gmaps.distance_matrix(id_partida, partidas_ids, units='metric')
+
+            if 'rows' in partidas_dm and 'elements' in partidas_dm['rows'][0]:
+                partidas_dict = {}
+                elements = partidas_dm['rows'][0]['elements']
+                for i, carona in enumerate(caronas):
+                    distance = elements[i].get('distance', {})
+                    # Convert the distance from meters to kilometers
+                    distance_num = distance.get('value', float('inf')) / 1000
+                    partidas_dict[carona] = distance_num
+                
+                caronas = [carona for carona in caronas if partidas_dict[carona]<=5]
+
+            dia = request.POST['dia'].lower()
             corrida_list = Corrida.objects.filter(
-                dia__icontains=search_term,
+                dia__icontains=dia,
                 ativa=True,
-                vagas__gt=0
+                vagas__gt=0,
+                carona__in = caronas
                 )
             htmlEQ = {
                 'True': {'title': 'Corrida solicitada'},
