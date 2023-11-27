@@ -19,6 +19,7 @@
     {% for corrida in corrida_list %}
     <article>
         <p>{{ corrida.id }}: {{ corrida.dia }} ({{ corrida.vagas }})</p>
+        <a href="{% url 'passageiro:detail' user.id corrida.id %}">Ver detalhes</a>
         <form method="post" action="{% url 'passageiro:request' user.id corrida.id%}">
             {% csrf_token %}
             <button

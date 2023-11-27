@@ -4,4 +4,5 @@
     <button><a href="{% url 'passageiro:list-accepted' user.id 'accepted'%}">Minhas corridas</a></button>
     <button><a href="{% url 'passageiro:edit' user.id %}">Editar perfil</a></button>
     <button><a href="{% url 'passageiro:search' user.id %}">Procurar corridas</a></button>
+    <button><a href="{% url 'accounts:afterlogin' user.id %}">Escolher ator</a></button>
     <button><a href="{% url 'logout' %}">Logout</a></button>

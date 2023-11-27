@@ -1,0 +1,11 @@
+<form method="POST" action="{% url 'passageiro:leave' user.id corrida.id %}">
+    {% csrf_token %}
+    <p>
+      Confirmar - Sair da corrida do dia {{corrida.dia}}?
+    </p>
+    <p>
+      <label for="leave"><input type="checkbox" id="leave" name="leave" required> Sim, desejo sair.</label>
+    </p>
+    <button type="submit">Sair</button>
+  </form>
+  <button><a href="{% url 'passageiro:detail' user.id corrida.carona.id%}">Voltar para a tela da corrida</a></button>

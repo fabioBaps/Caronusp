@@ -6,12 +6,15 @@
         <li><a href="{% url 'passageiro:list-accepted' user.id 'accepted' %}">Aceitas</a></li>
         <li><a href="{% url 'passageiro:list-requested' user.id 'requested' %}">Solicitadas</a></li>
         <li><a href="{% url 'passageiro:list-rejected' user.id 'rejected' %}">Rejeitadas</a></li>
+        <li><a href="{% url 'passageiro:list-ended' user.id 'ended' %}">Finalizadas</a></li>
     </ul>
     {% if corrida_list %}
     <section>
         {% for corrida in corrida_list %}
         <article>
-            <p>{{ corrida.id }}: {{ corrida.dia }}</p>
+            <p>{{ corrida.id }}: {{ corrida.dia }}
+            <a href="{% url 'passageiro:detail' user.id corrida.id %}">Ver detalhes</a>
+            </p>
         </article>
         {% endfor %}
     </section>

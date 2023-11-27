@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
 from django.urls import reverse
-from accounts.models import Usuario,Passageiro, Corrida, Passageiros_corrida
+from accounts.models import Usuario, Passageiro, Corrida, Passageiros_corrida, Carona
 from django.contrib.auth.decorators import login_required
 import googlemaps
 
@@ -78,17 +78,62 @@ def ListView(request, usuario_id, aceito):
     usuario = get_object_or_404(Usuario, pk=usuario_id)
     if usuario.is_passageiro and usuario.id == user.id:
         passageiro = Passageiro.objects.filter(usuario_id=usuario.id)[0]
-        strToBool = {'accepted': True, 'requested': None, 'rejected': False}
-        title = {'accepted': 'aceitas', 'requested': 'solicitadas', 'rejected': 'rejeitadas'}
+        strToBool = {'accepted': True, 'requested': None, 'rejected': False, 'ended': True}
+        title = {'accepted': 'aceitas', 'requested': 'solicitadas', 'rejected': 'rejeitadas', 'ended': 'finalizadas'}
         list = Passageiros_corrida.objects.filter(
             passageiro_id=passageiro.id,
             aceito=strToBool[aceito])
         corrida_list = []
         for c in list:
-            corrida = Corrida.objects.filter(id=c.corrida_id)[0]
-            corrida_list.append(corrida)
+            ativa = True
+            if aceito == 'ended':
+                ativa = False
+            corrida = Corrida.objects.filter(id=c.corrida_id, ativa=ativa)
+            if corrida:
+                corrida_list.append(corrida[0])
         context = {"corrida_list": corrida_list, "title": title[aceito]}
         return render(request, 'passageiro/list.html', context)
+    else:
+        return HttpResponseRedirect(
+            reverse('accounts:afterlogin', args=(user.id, )))
+        
+@login_required
+def DetailView(request, usuario_id, corrida_id):
+    user = request.user
+    usuario = get_object_or_404(Usuario, pk=usuario_id)
+    if usuario.is_passageiro and usuario.id == user.id:
+        passageiro = Passageiro.objects.filter(usuario_id=usuario.id)[0]
+        corrida = get_object_or_404(Corrida, pk=corrida_id)
+        carona = Carona.objects.filter(id=corrida.carona_id)[0]
+        passageiros = Passageiros_corrida.objects.filter(corrida=corrida, aceito=True)
+        ids_passageiros = passageiros.values_list('passageiro_id', flat=True)
+        corrida.contains = passageiro.id in ids_passageiros
+        context = {"corrida": corrida, "carona": carona}
+        return render(request, 'passageiro/race_detail.html', context)
+    else:
+        return HttpResponseRedirect(
+            reverse('accounts:afterlogin', args=(user.id, )))
+        
+@login_required
+def LeaveView(request, usuario_id, corrida_id):
+    user = request.user
+    usuario = get_object_or_404(Usuario, pk=usuario_id)
+    if usuario.is_passageiro and usuario.id == user.id:
+        passageiro = Passageiro.objects.filter(usuario_id=usuario.id)[0]
+        corrida = get_object_or_404(Corrida, pk=corrida_id)
+        passageiro_corrida = Passageiros_corrida.objects.filter(passageiro=passageiro, corrida=corrida, aceito=True)
+        if passageiro_corrida and corrida.ativa:
+            if request.method == "POST":
+                passageiro_corrida[0].delete()
+                corrida.vagas += 1
+                corrida.save()
+                return HttpResponseRedirect(
+                    reverse('passageiro:detail', args=(usuario.id, corrida.id, )))
+            else:
+                return render(request, 'passageiro/leave_race.html', {'usuario': usuario, 'corrida': corrida})
+        else:
+            return HttpResponseRedirect(
+                reverse('passageiro:detail', args=(usuario.id, corrida.id, )))
     else:
         return HttpResponseRedirect(
             reverse('accounts:afterlogin', args=(user.id, )))

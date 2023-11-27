@@ -16,8 +16,14 @@ def signup(request):
     if request.method == 'POST':
         form = UsuarioCreationForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
-            return HttpResponseRedirect(reverse('index'))
+            user = form.save()
+            authenticated_user = authenticate(
+                request,
+                username=form.cleaned_data['username'],
+                password=form.cleaned_data['password1']
+            )
+            login(request, authenticated_user)
+            return HttpResponseRedirect(reverse('accounts:afterlogin', args=(user.id, )))
     else:
         form = UsuarioCreationForm()
 
