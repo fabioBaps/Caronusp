@@ -1,3 +1,6 @@
+{% extends 'base.html' %}
+{% block content %}
+
 <h1>Condutorrrrrrrr</h1>
 <p>{{ user.username }}</p>
 <p>{{ user.id }}</p>
@@ -8,3 +11,5 @@
 <p>Carona saindo de {{ carona.local_partida }} as {{carona.horario_partida}}</p>
 <button><a href="{% url 'condutor:detail_carona' user.id carona.id %}">Detalhes</a></button>
 {% endfor %}
+
+{% endblock content %}

@@ -12,4 +12,8 @@ urlpatterns = [
     path('<int:usuario_id>/carona/<int:carona_id>/edit', views.edit_carona, name='edit_carona'),
     path('<int:usuario_id>/corrida/<int:corrida_id>/delete', views.delete_corrida, name='delete_corrida'),
     path('<int:usuario_id>/carona/<int:carona_id>/create_corrida', views.create_corrida, name='create_corrida'),
+    path('<int:usuario_id>/corrida/<int:corrida_id>/aceitar_passageiro_corrida/<int:passageiro_id>', views.aceitar_passageiro_corrida, name='aceitar_passageiro_corrida'),
+    path('<int:usuario_id>/corrida/<int:corrida_id>/rejeitar_passageiro_corrida/<int:passageiro_id>', views.rejeitar_passageiro_corrida, name='rejeitar_passageiro_corrida'),
+    path('<int:usuario_id>/corrida/<int:corrida_id>/encerrar_corrida', views.encerrar_corrida, name='encerrar_corrida'),
+    path('<int:usuario_id>/corrida/<int:corrida_id>/avalia_passageiro_individual/<int:passageiro_id>', views.avalia_passageiro_individual, name='avalia_passageiro_individual'),
 ]

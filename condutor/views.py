@@ -1,9 +1,10 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
 from django.urls import reverse
-from accounts.models import Usuario, Condutor, Carona, Corrida, Passageiros_corrida, Passageiro
+from accounts.models import Usuario, Condutor, Carona, Corrida, Passageiros_corrida, Passageiro, Avaliacao_Passageiro
 from django.contrib.auth.decorators import login_required
 import googlemaps
+import numpy as np
 
 
 @login_required
@@ -48,11 +49,12 @@ def get_passageiros(corrida):
     passageiros_aceitos = []
     passageiros_a_aceitar = []
     for passageiro in passageiros_da_corrida:
-        passageiro_i = Passageiro.objects.filter(pk=passageiro.passageiro)
-        if passageiro_i.aceito:
+        passageiro_i = get_object_or_404(Passageiro, pk=passageiro.passageiro.id)
+        if passageiro.aceito == True:
             passageiros_aceitos.append(passageiro_i)
-        else:
+        elif passageiro.aceito != False:
             passageiros_a_aceitar.append(passageiro_i)
+        # else = passageiro rejeitado
     return {
         'corrida':corrida,
         'passageiros_a_aceitar':passageiros_a_aceitar,
@@ -107,4 +109,62 @@ def create_corrida(request, usuario_id, carona_id):
     context = {'carona':carona}
     return render(request, 'condutor/create_corrida.html', context)
     
+def aceitar_passageiro_corrida(request, usuario_id, corrida_id, passageiro_id):
+    passageiro_corrida = Passageiros_corrida.objects.filter(corrida=corrida_id, passageiro=passageiro_id)[0]
+    passageiro_corrida.aceito = True
+    passageiro_corrida.save()
+    corrida = get_object_or_404(Corrida, pk=corrida_id)
+    carona = get_object_or_404(Carona, pk=corrida.carona.id)
+    corridas = Corrida.objects.filter(carona=carona, ativa=True)
+    info_corridas_passageiros = [get_passageiros(corrida_) for corrida_ in corridas]
+    context = {'usuario_id': usuario_id, 'carona':carona, 'info_corridas_passageiros':info_corridas_passageiros}
+    return render(request, 'condutor/detail_carona.html', context)
+
+def rejeitar_passageiro_corrida(request, usuario_id, corrida_id, passageiro_id):
+    passageiro_corrida = Passageiros_corrida.objects.filter(corrida=corrida_id, passageiro=passageiro_id)[0]
+    passageiro_corrida.aceito = False
+    passageiro_corrida.save()
+    corrida = get_object_or_404(Corrida, pk=corrida_id)
+    carona = get_object_or_404(Carona, pk=corrida.carona.id)
+    corridas = Corrida.objects.filter(carona=carona, ativa=True)
+    info_corridas_passageiros = [get_passageiros(corrida_) for corrida_ in corridas]
+    context = {'usuario_id': usuario_id, 'carona':carona, 'info_corridas_passageiros':info_corridas_passageiros}
+    return render(request, 'condutor/detail_carona.html', context)
+
+def encerrar_corrida(request, usuario_id, corrida_id):
+    corrida = get_object_or_404(Corrida, pk=corrida_id)
+    corrida.ativa=False
+    corrida.save()
+    passageiros_corrida = Passageiros_corrida.objects.filter(corrida=corrida_id, aceito=True)
+    passageiros_corrida_nao_avaliados = []
+    for passageiro in passageiros_corrida:
+        try:
+            get_object_or_404(Avaliacao_Passageiro, corrida=corrida_id, avaliado=passageiro.id)
+            passageiros_corrida_nao_avaliados.append(passageiro)
+        except:
+            pass
+    context = {'usuario_id': usuario_id, 'corrida':corrida, 'passageiros_corrida':passageiros_corrida_nao_avaliados}
+    return render(request, 'condutor/avalia_passageiros_corrida.html', context)
+
+def avalia_passageiro_individual(request, usuario_id, corrida_id, passageiro_id):
+    corrida = get_object_or_404(Corrida, pk=corrida_id)
+    passageiro = get_object_or_404(Passageiro, pk=passageiro_id)
+    condutor = get_object_or_404(Condutor, usuario=usuario_id)
+    if request.method == "POST":
+        nota = request.POST['nota']
+        avaliacao = Avaliacao_Passageiro(corrida=corrida,avaliador=condutor,avaliado=passageiro,nota=nota)
+        avaliacao.save()
+        recalcula_media_passageiro(passageiro_id)
+        return HttpResponseRedirect(
+            reverse('condutor:encerrar_corrida', args=(usuario_id, corrida.id )))
+    passageiros_corrida = Passageiros_corrida.objects.filter(corrida=corrida_id, aceito=True)
+    context = {'usuario_id': usuario_id, 'corrida':corrida, 'passageiros_corrida':passageiros_corrida}
+    return render(request, 'condutor/avalia_passageiros_corrida.html', context)
+
+def recalcula_media_passageiro(passageiro_id):
+    passageiro = get_object_or_404(Passageiro, pk=passageiro_id)
+    avaliacoes = Avaliacao_Passageiro.objects.filter(avaliado=passageiro.id)
+    nota_media = np.mean([item.nota for item in avaliacoes ])
+    passageiro.nota_media = nota_media
+    passageiro.save()
 

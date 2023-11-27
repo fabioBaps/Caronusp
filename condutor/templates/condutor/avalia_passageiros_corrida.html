@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1>Avalie seus passageiros</h1>
+{% if passageiros_corrida %}
+{% for passageiro in passageiros_corrida %}
+<p>{{passageiro}}</p>
+
+
+<form method="post" action="{% url 'condutor:avalia_passageiro_individual' user.id corrida.id passageiro.passageiro.id %}">
+  {% csrf_token %}
+  <label for="id_nota">Nota:</label>
+  <input type="number" name="nota" id="id_nota" min="0" max="5"/>
+  <button type="submit">Avaliar</button>
+</form>
+
+<br>
+{% endfor %}
+{% else %}
+<h3>Todos passageiros já foram avaliados</h3>
+<button><a href="{% url 'condutor:detail_carona' user.id corrida.carona.id %}">Voltar</a></button>
+{% endif %}
+{% endblock content %}
