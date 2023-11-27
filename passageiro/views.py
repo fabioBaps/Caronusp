@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 import googlemaps
 from _env import GOOGLE_API_KEY
 import requests
+from datetime import datetime, timedelta
 
 @login_required
 def initial(request, usuario_id):
@@ -67,7 +68,13 @@ def Search_RequestView(request, usuario_id, corrida_id=None):
                 top_partida = partida_result[0]
                 id_partida = top_partida['formatted_address']
 
-            caronas = Carona.objects.all()
+            input_time_str = request.POST.get('horario_chegada')
+            input_time = datetime.strptime(input_time_str, '%H:%M').time()
+            thirty_minutes_before = (datetime.combine(datetime.today(), input_time) - timedelta(minutes=30)).time()
+
+            caronas = Carona.objects.filter(horario_chegada__lte=input_time, horario_chegada__gte=thirty_minutes_before)
+            if len(caronas) == 0: return HttpResponseRedirect(reverse('passageiro:search', args=(user.id, )))
+                                                                
 
             chegadas_ids = [carona.endereco_chegada for carona in caronas]
             print(chegadas_ids)
@@ -87,6 +94,8 @@ def Search_RequestView(request, usuario_id, corrida_id=None):
                 
                 caronas = [carona for carona in caronas if chegadas_dict[carona]<=5]
             
+            if len(caronas) == 0: return HttpResponseRedirect(reverse('passageiro:search', args=(user.id, )))
+            
             partidas_ids = [carona.endereco_partida for carona in caronas]
             partidas_dm = gmaps.distance_matrix(id_partida, partidas_ids, units='metric')
 
@@ -100,6 +109,8 @@ def Search_RequestView(request, usuario_id, corrida_id=None):
                     partidas_dict[carona] = distance_num
                 
                 caronas = [carona for carona in caronas if partidas_dict[carona]<=5]
+            if len(caronas) == 0: return HttpResponseRedirect(reverse('passageiro:search', args=(user.id, )))
+
 
             dia = request.POST['dia'].lower()
             corrida_list = Corrida.objects.filter(

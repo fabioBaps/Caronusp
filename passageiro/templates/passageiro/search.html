@@ -17,6 +17,10 @@
         <label for="id_local_chegada">Local de chegada:</label>
         <input type="text" name="local_chegada" id="id_local_chegada" />
     </p>
+    <p>
+        <label for="id_horario_chegada">Horário de chegada:</label>
+        <input type="time" name="horario_chegada" id="id_horario_chegada" />
+    </p>
     <button type="submit">Buscar</button>
 </form>
 
@@ -27,7 +31,8 @@
 <section>
     {% for corrida in corrida_list %}
     <article>
-        <p>{{ corrida.id }}: {{ corrida.dia }} {{ corrida.carona.local_partida }} para {{ corrida.carona.local_chegada }} ({{ corrida.vagas }})</p>
+        <p>{{ corrida.id }}: {{ corrida.dia }} {{ corrida.carona.local_partida }} ({{ corrida.carona.horario_partida }})
+             para {{ corrida.carona.local_chegada }} ({{ corrida.carona.horario_chegada }}) : Vagas {{ corrida.vagas }}</p>
         <form method="post" action="{% url 'passageiro:request' user.id corrida.id%}">
             {% csrf_token %}
             <button
