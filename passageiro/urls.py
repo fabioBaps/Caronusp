@@ -13,6 +13,7 @@ urlpatterns = [
     path('<int:usuario_id>/list/<str:aceito>/', views.ListView, name='list-requested'),
     path('<int:usuario_id>/list/<str:aceito>/', views.ListView, name='list-rejected'),
     path('<int:usuario_id>/list/<str:aceito>/', views.ListView, name='list-ended'),
-    path('<int:usuario_id>/racedetail/<int:corrida_id>', views.DetailView, name='detail'),
-    path('<int:usuario_id>/leave/<int:corrida_id>', views.LeaveView, name='leave'),
+    path('<int:usuario_id>/racedetail/<int:corrida_id>/', views.DetailView, name='detail'),
+    path('<int:usuario_id>/leave/<int:corrida_id>/', views.LeaveView, name='leave'),
+    path('<int:usuario_id>/in/<int:corrida_id>/rates/', views.AvaliacaoView, name='rate')
 ]

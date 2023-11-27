@@ -1,9 +1,10 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
 from django.urls import reverse
-from accounts.models import Usuario, Passageiro, Corrida, Passageiros_corrida, Carona
+from accounts.models import Usuario, Condutor, Passageiro, Corrida, Passageiros_corrida, Carona, Avaliacao_Condutor
 from django.contrib.auth.decorators import login_required
 import googlemaps
+import numpy as np
 
 @login_required
 def initial(request, usuario_id):
@@ -46,9 +47,9 @@ def Search_RequestView(request, usuario_id, corrida_id=None):
         passageiro = Passageiro.objects.filter(usuario_id=usuario.id)[0]
         context = {}
         if request.GET.get('query', False):
-            search_term = request.GET['query'].lower()
+            dia = request.GET['query'].lower()
             corrida_list = Corrida.objects.filter(
-                dia__icontains=search_term,
+                dia=dia,
                 ativa=True,
                 vagas__gt=0
                 )
@@ -85,11 +86,12 @@ def ListView(request, usuario_id, aceito):
             aceito=strToBool[aceito])
         corrida_list = []
         for c in list:
-            ativa = True
+            c.ativa = True
             if aceito == 'ended':
-                ativa = False
-            corrida = Corrida.objects.filter(id=c.corrida_id, ativa=ativa)
+                c.ativa = False
+            corrida = Corrida.objects.filter(id=c.corrida_id, ativa=c.ativa)
             if corrida:
+                corrida[0].aval = Avaliacao_Condutor.objects.filter(avaliador_id = passageiro.id, corrida_id = corrida[0].id)
                 corrida_list.append(corrida[0])
         context = {"corrida_list": corrida_list, "title": title[aceito]}
         return render(request, 'passageiro/list.html', context)
@@ -137,3 +139,37 @@ def LeaveView(request, usuario_id, corrida_id):
     else:
         return HttpResponseRedirect(
             reverse('accounts:afterlogin', args=(user.id, )))
+        
+@login_required
+def AvaliacaoView(request, usuario_id, corrida_id):
+    user = request.user
+    usuario = get_object_or_404(Usuario, pk=usuario_id)
+    if usuario.is_passageiro and usuario.id == user.id:
+        passageiro = Passageiro.objects.filter(usuario_id=usuario.id)[0]
+        corrida = get_object_or_404(Corrida, pk=corrida_id)
+        carona = get_object_or_404(Carona, pk=corrida.carona_id)
+        condutor = get_object_or_404(Condutor, pk=carona.condutor_id)
+        corrida.condutor = condutor
+        passageiro_corrida = Passageiros_corrida.objects.filter(passageiro=passageiro, corrida=corrida, aceito=True)
+        if passageiro_corrida and (not corrida.ativa):
+            if request.method == "POST":
+                avaliacao = Avaliacao_Condutor(avaliador=passageiro, avaliado=condutor, corrida=corrida, nota=request.POST['nota'])
+                avaliacao.save()
+                recalcula_media_condutor(condutor.id)
+                return HttpResponseRedirect(
+                    reverse('passageiro:list-ended', args=(usuario.id, 'ended', )))
+            else:
+                return render(request, 'passageiro/rate.html', {'corrida': corrida})
+        else:
+            return HttpResponseRedirect(
+                reverse('passageiro:list-ended', args=(usuario.id, 'ended', )))
+    else:
+        return HttpResponseRedirect(
+            reverse('accounts:afterlogin', args=(user.id, )))
+        
+def recalcula_media_condutor(condutor_id):
+    condutor = get_object_or_404(Condutor, pk=condutor_id)
+    avaliacoes = Avaliacao_Condutor.objects.filter(avaliado=condutor.id)
+    nota_media = np.mean([item.nota for item in avaliacoes ])
+    condutor.nota_media = nota_media
+    condutor.save()
