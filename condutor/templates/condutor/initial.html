@@ -4,7 +4,18 @@
 <h1>Condutorrrrrrrr</h1>
 <p>{{ user.username }}</p>
 <p>{{ user.id }}</p>
+<button><a href="{% url 'condutor:edit_perfil' user.id %}">Editar perfil</a></button>
 <button><a href="{% url 'condutor:create_carona' user.id %}">Criar carona</a></button>
+<button><a href="{% url 'condutor:list_corridas' user.id %}">Ver histórico de corridas</a></button>
+
+
+{% if notificacoes %}
+{% for notificacao in notificacoes %}
+<h1>Notificações</h1>
+<p>{{ notificacao.texto }}</p>
+<button><a href="{% url 'condutor:read_notificacao' user.id notificacao.id %}">Marcar como lida</a></button>
+{% endfor %}
+{% endif %}
 
 <h1>Minhas caronas</h1>
 {% for carona in caronas %}

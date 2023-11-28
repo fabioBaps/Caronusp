@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block content %}
+<a href="{% url 'condutor:initial' user.id %}"> Voltar</a>
+    <h1>Histórico de corridas {{ title }}</h1>
+    {% if corrida_list %}
+    <section>
+        {% for corrida in corrida_list %}
+        <article>
+            <p>{{ corrida.id }}: {{ corrida.dia }}
+            </p>
+        </article>
+        {% endfor %}
+    </section>
+    {% else %}
+        <p>Você não tem corridas para essa categoria.</p>
+    {% endif %}
+{% endblock %}
