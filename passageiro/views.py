@@ -49,7 +49,7 @@ def Search_RequestView(request, usuario_id, corrida_id=None):
     if usuario.is_passageiro and usuario.id == user.id:
         passageiro = Passageiro.objects.filter(usuario_id=usuario.id)[0]
         context = {}
-        if request.method == 'POST':
+        if request.method == 'POST' and request.POST.get('horario_chegada'):
             api_key = GOOGLE_API_KEY
             chegada = request.POST.get('local_chegada')
             chegada_url = f"https://maps.googleapis.com/maps/api/place/textsearch/json?query={chegada}&key={api_key}"
