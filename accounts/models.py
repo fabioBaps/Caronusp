@@ -112,6 +112,7 @@ class Notificacao(models.Model):
     texto = models.TextField()
     hora = models.DateTimeField(auto_now_add=True)
     visto = models.BooleanField(default=False)
+    para_condutor = models.BooleanField()
 
     def __str__(self):
         return f'"{self.id}" - {self.usuario} - {self.corrida} - {self.texto} - {self.hora}'

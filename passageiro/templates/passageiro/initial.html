@@ -6,3 +6,11 @@
     <button><a href="{% url 'passageiro:search' user.id %}">Procurar corridas</a></button>
     <button><a href="{% url 'accounts:afterlogin' user.id %}">Escolher ator</a></button>
     <button><a href="{% url 'logout' %}">Logout</a></button>
+
+{% if notificacoes %}
+{% for notificacao in notificacoes %}
+<h1>Notificações</h1>
+<p>{{ notificacao.texto }}</p>
+<button><a href="{% url 'passageiro:read_notificacao' user.id notificacao.id %}">Marcar como lida</a></button>
+{% endfor %}
+{% endif %}
