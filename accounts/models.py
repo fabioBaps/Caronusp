@@ -108,7 +108,6 @@ class Mensagem(models.Model):
     
 class Notificacao(models.Model):
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
-    corrida = models.ForeignKey(Corrida, on_delete=models.CASCADE)
     texto = models.TextField()
     hora = models.DateTimeField(auto_now_add=True)
     visto = models.BooleanField(default=False)

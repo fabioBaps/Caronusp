@@ -162,7 +162,7 @@ def edit_carona(request, usuario_id, carona_id):
             passageiros_corrida = Passageiros_corrida.objects.filter(corrida=corrida, aceito=True)
             for passageiro in passageiros_corrida:
                 texto_notificação = f'A corrida de {corrida.carona.condutor.usuario.first_name} {corrida.carona.condutor.usuario.last_name} do dia {corrida.dia} foi editada. Veja os detalhes!'
-                notificacao = Notificacao(corrida=corrida, usuario=passageiro.passageiro.usuario, texto=texto_notificação, para_condutor=False)
+                notificacao = Notificacao(usuario=passageiro.passageiro.usuario, texto=texto_notificação, para_condutor=False)
                 notificacao.save()
         
         return HttpResponseRedirect(
@@ -181,7 +181,7 @@ def delete_corrida(request, usuario_id, corrida_id):
         passageiros_corrida = Passageiros_corrida.objects.filter(corrida=corrida_id, aceito=True)
         for passageiro in passageiros_corrida:
             texto_notificação = f'A corrida de {corrida.carona.condutor.usuario.first_name} {corrida.carona.condutor.usuario.last_name} do dia {corrida.dia} foi cancelada. Procure outra!'
-            notificacao = Notificacao(corrida=corrida, usuario=passageiro.passageiro.usuario, texto=texto_notificação, para_condutor=False)
+            notificacao = Notificacao(usuario=passageiro.passageiro.usuario, texto=texto_notificação, para_condutor=False)
             notificacao.save()
         corrida.delete()
         return HttpResponseRedirect(
@@ -215,7 +215,7 @@ def aceitar_passageiro_corrida(request, usuario_id, corrida_id, passageiro_id):
     carona = get_object_or_404(Carona, pk=corrida.carona.id)
     corridas = Corrida.objects.filter(carona=carona, ativa=True)
     texto_notificação = f'Você foi aceito na corrida de {carona.condutor.usuario.first_name} {carona.condutor.usuario.last_name} do dia {corrida.dia}'
-    notificacao = Notificacao(corrida=corrida, usuario=passageiro_corrida.passageiro.usuario, texto=texto_notificação, para_condutor=False)
+    notificacao = Notificacao(usuario=passageiro_corrida.passageiro.usuario, texto=texto_notificação, para_condutor=False)
     notificacao.save()
     info_corridas_passageiros = [get_passageiros(corrida_) for corrida_ in corridas]
     context = {'usuario_id': usuario_id, 'carona':carona, 'info_corridas_passageiros':info_corridas_passageiros}
@@ -231,7 +231,7 @@ def rejeitar_passageiro_corrida(request, usuario_id, corrida_id, passageiro_id):
     carona = get_object_or_404(Carona, pk=corrida.carona.id)
     corridas = Corrida.objects.filter(carona=carona, ativa=True)
     texto_notificação = f'Você foi rejeitado na corrida de {carona.condutor.usuario.first_name} {carona.condutor.usuario.last_name} do dia {corrida.dia}'
-    notificacao = Notificacao(corrida=corrida, usuario=passageiro_corrida.passageiro.usuario, texto=texto_notificação, para_condutor=False)
+    notificacao = Notificacao(usuario=passageiro_corrida.passageiro.usuario, texto=texto_notificação, para_condutor=False)
     notificacao.save()
     info_corridas_passageiros = [get_passageiros(corrida_) for corrida_ in corridas]
     context = {'usuario_id': usuario_id, 'carona':carona, 'info_corridas_passageiros':info_corridas_passageiros}
@@ -248,7 +248,7 @@ def encerrar_corrida(request, usuario_id, corrida_id):
     passageiros_corrida_nao_avaliados = []
     for passageiro in passageiros_corrida:
         texto_notificação = f'A corrida de {condutor.usuario.first_name} {condutor.usuario.last_name} do dia {corrida.dia} foi encerrada. Avalie o condutor!'
-        notificacao = Notificacao(corrida=corrida, usuario=passageiro.passageiro.usuario, texto=texto_notificação, para_condutor=False)
+        notificacao = Notificacao(usuario=passageiro.passageiro.usuario, texto=texto_notificação, para_condutor=False)
         notificacao.save()
         try: # ja existe avaliacao?
             get_object_or_404(Avaliacao_Passageiro, corrida_id=corrida_id, avaliado_id=passageiro.passageiro.id)

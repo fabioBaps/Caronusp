@@ -137,7 +137,7 @@ def Search_RequestView(request, usuario_id, corrida_id=None):
             passageiro_corrida.save()
 
             texto_notificação = f'{passageiro.usuario.first_name} {passageiro.usuario.last_name} solicitou entrada na sua corrida de {corrida.dia}. Responda sua solicitação!'
-            notificacao = Notificacao(corrida=corrida, usuario=corrida.carona.condutor.usuario, texto=texto_notificação, para_condutor=True)
+            notificacao = Notificacao(usuario=corrida.carona.condutor.usuario, texto=texto_notificação, para_condutor=True)
             notificacao.save()
                 
         return render(request, 'passageiro/search.html', context)
