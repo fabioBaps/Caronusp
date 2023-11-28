@@ -17,3 +17,6 @@
 {% endif %}
 <button><a href="{% url 'passageiro:initial' user.id %}">Voltar para tela inicial</a></button>
 
+<button><a href="{% url 'chat:chat_corrida' user.id corrida.id 1 %}"> Chat </a></button>
+
+
