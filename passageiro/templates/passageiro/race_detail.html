@@ -1,3 +1,10 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Detalhes da corrida
+{% endblock title %}
+
+{% block content %}
 <h1> Detalhes da corrida </h1>
 <h3>
   Dia: {{ corrida.dia }}
@@ -13,7 +20,8 @@
   Placa: {{carona.placa_veiculo}}
   <br>
 </h3>
-{% if corrida.contains and corrida.ativa %} <button><a href="{% url 'passageiro:leave' user.id corrida.id %}">Sair da corrida</a></button>
+{% if corrida.contains and corrida.ativa %} <a class="exit" href="{% url 'passageiro:leave' user.id corrida.id %}">Sair da corrida</a>
 {% endif %}
-<button><a href="{% url 'passageiro:initial' user.id %}">Voltar para tela inicial</a></button>
+<a onclick="history.back()">Voltar</a>
+{% endblock content %}
 

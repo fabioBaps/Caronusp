@@ -1,7 +1,10 @@
 {% extends 'base.html' %}
 
+{% block title %}
+Pesquisar
+{% endblock title %}
+
 {% block content %}
-<a href="{% url 'passageiro:initial' user.id %}">< Voltar</a>
 <h2>Busca de corridas</h2>
 <form action="{% url 'passageiro:search' user.id %}" method="post">
     {% csrf_token %}
@@ -32,21 +35,22 @@
     {% for corrida in corrida_list %}
     <article>
         <p>{{ corrida.id }}: {{ corrida.dia }} {{ corrida.carona.local_partida }} ({{ corrida.carona.horario_partida }})
-             para {{ corrida.carona.local_chegada }} ({{ corrida.carona.horario_chegada }}) : Vagas {{ corrida.vagas }}</p>
-        <a href="{% url 'passageiro:detail' user.id corrida.id %}">Ver detalhes</a>
-        <form method="post" action="{% url 'passageiro:request' user.id corrida.id%}">
-            {% csrf_token %}
-            <button
-            {% if corrida.exists %}disabled{% endif %}
-            {% if not corrida.exists %}type="submit"{% endif %}>
-            {{corrida.title}}
+            para {{ corrida.carona.local_chegada }} ({{ corrida.carona.horario_chegada }}) : Vagas {{ corrida.vagas }}</p>
+            <a href="{% url 'passageiro:detail' user.id corrida.id %}">Ver detalhes</a>
+            <form method="post" action="{% url 'passageiro:request' user.id corrida.id%}">
+                {% csrf_token %}
+                <button
+                {% if corrida.exists %}disabled{% endif %}
+                {% if not corrida.exists %}type="submit"{% endif %}>
+                {{corrida.title}}
             </button>
         </form>
     </article>
     {% endfor %}
 </section>
 {% else %}
-    <p>Não foi encontrada nenhuma corrida para a busca.</p>
+<p>Não foi encontrada nenhuma corrida para a busca</p>
 {% endif %}
 
+<a href="{% url 'passageiro:initial' user.id %}">Voltar</a>
 {% endblock content %}

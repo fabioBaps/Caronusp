@@ -1,11 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Sair da corrida
+{% endblock title %}
+
+{% block content %}
 <form method="POST" action="{% url 'passageiro:leave' user.id corrida.id %}">
     {% csrf_token %}
     <p>
       Confirmar - Sair da corrida do dia {{corrida.dia}}?
     </p>
-    <p>
-      <label for="leave"><input type="checkbox" id="leave" name="leave" required> Sim, desejo sair.</label>
-    </p>
-    <button type="submit">Sair</button>
+    <button class="exit" type="submit">Sair</button>
+    <a href="{% url 'passageiro:list-accepted' user.id 'accepted' %}">Voltar para corridas aceitas</a>
   </form>
-  <button><a href="{% url 'passageiro:detail' user.id corrida.carona.id%}">Voltar para a tela da corrida</a></button>
+{% endblock content %}

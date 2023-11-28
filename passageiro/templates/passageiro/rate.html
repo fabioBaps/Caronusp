@@ -1,15 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Avaliar condutor
+{% endblock title %}
+
 {% block content %}
 
-<h1>Avalie o condutor {{corrida.condutor.usuario.username}} em relação a corrida do dia {{corrida.dia}}</h1>
+<h1>Avalie o condutor {{corrida.condutor.usuario.first_name}} {{corrida.condutor.usuario.last_name}} em relação a corrida do dia {{corrida.dia}}</h1>
 
 
 <form method="post" action="{% url 'passageiro:rate' user.id corrida.id %}">
   {% csrf_token %}
   <label for="id_nota">Nota:</label>
-  <input type="number" name="nota" id="id_nota" min="0" max="5"/>
+  <div class="rating">
+    <input type="radio" name="nota" value="5" id="star5" /><label for="star5" title="5 estrelas"></label>
+    <input type="radio" name="nota" value="4" id="star4" /><label for="star4" title="4 estrelas"></label>
+    <input type="radio" name="nota" value="3" id="star3" /><label for="star3" title="3 estrelas"></label>
+    <input type="radio" name="nota" value="2" id="star2" /><label for="star2" title="2 estrelas"></label>
+    <input type="radio" name="nota" value="1" id="star1" /><label for="star1" title="1 estrela"></label>
+  </div>
   <button type="submit">Avaliar</button>
 </form>
 
+
 <br>
-<button><a href="{% url 'passageiro:list-ended' user.id 'ended' %}">Voltar</a></button>
+<a href="{% url 'passageiro:list-ended' user.id 'ended' %}">Voltar</a>
 {% endblock content %}

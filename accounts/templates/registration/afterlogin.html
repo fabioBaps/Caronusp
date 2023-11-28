@@ -1,16 +1,18 @@
 {% extends 'base.html' %}
 {% block content %}
+<div class="afterlogin">
 {% if user.is_condutor %}
-    <li><a href="{% url 'condutor:initial' user.id%}">Logar como condutor</a></li>
+    <a href="{% url 'condutor:initial' user.id%}">Logar como condutor</a>
 {% else %}
-    <li><a href="{% url 'accounts:condutor' user.id%}">Cadastrar condutor</a></li>
+    <a href="{% url 'accounts:condutor' user.id%}">Cadastrar condutor</a>
 {% endif %}
 {% if user.is_passageiro %}
-    <li><a href="{% url 'passageiro:initial' user.id%}">Logar como passageiro</a></li>
+    <a href="{% url 'passageiro:initial' user.id%}">Logar como passageiro</a>
 {% else %}
     <form method="post" action="{% url 'accounts:passageiro' user.id %}">
         {% csrf_token %}
         <button type="submit">Cadastrar passageiro</button>
     </form>
 {% endif %}
+</div>
 {% endblock content %}

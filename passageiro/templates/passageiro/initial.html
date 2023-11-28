@@ -1,8 +1,18 @@
-<h1>Passageirooooo</h1>
-    <p> {{ user.id }} </p>
-    <p> {{ user.username }} </p>
-    <button><a href="{% url 'passageiro:list-accepted' user.id 'accepted'%}">Minhas corridas</a></button>
-    <button><a href="{% url 'passageiro:edit' user.id %}">Editar perfil</a></button>
-    <button><a href="{% url 'passageiro:search' user.id %}">Procurar corridas</a></button>
-    <button><a href="{% url 'accounts:afterlogin' user.id %}">Escolher ator</a></button>
-    <button><a href="{% url 'logout' %}">Logout</a></button>
+{% extends 'base.html' %}
+
+{% block title %}
+Passageiro
+{% endblock title %}
+
+{% block content %}
+    <h1>Olá {{ user.first_name }} {{ user.last_name }}! Você está logado como passageiro</h1>
+    <h2>Aqui estão suas possíveis ações:</h2>
+    <a href="{% url 'passageiro:list-accepted' user.id 'accepted'%}">Minhas corridas</a>
+    <p>Aqui você pode ver as corridas aceitas, solicitadas, rejeitadas e finalizadas</p>
+    <a href="{% url 'passageiro:search' user.id %}">Procurar corridas</a>
+    <p>Buscar corridas de acordo com suas preferências</p>
+    <a href="{% url 'passageiro:edit' user.id %}">Editar perfil</a>
+    <p>Editar suas informações pessoais</p>
+    <a href="{% url 'accounts:afterlogin' user.id %}">Escolher ator</a>
+    <p>Voltar para a tela de escolha de login</p>
+{% endblock content %}
