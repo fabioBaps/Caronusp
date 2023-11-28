@@ -128,6 +128,7 @@ def detail_carona(request, usuario_id, carona_id):
 def edit_carona(request, usuario_id, carona_id):
     if not checa_login(request, usuario_id): return HttpResponseRedirect(reverse('accounts:afterlogin', args=(request.user.id,)))
     carona = get_object_or_404(Carona, pk=carona_id)
+    if not carona.condutor.usuario.id == request.user.id: return HttpResponseRedirect(reverse('accounts:afterlogin', args=(request.user.id,)))
     if request.method == "POST":
         api_key = GOOGLE_API_KEY
         chegada = request.POST['local_chegada']
@@ -177,6 +178,7 @@ def edit_carona(request, usuario_id, carona_id):
 def delete_corrida(request, usuario_id, corrida_id):
     if not checa_login(request, usuario_id): return HttpResponseRedirect(reverse('accounts:afterlogin', args=(request.user.id,)))
     corrida = get_object_or_404(Corrida, pk=corrida_id)
+    if not corrida.carona.condutor.usuario.id == request.user.id: return HttpResponseRedirect(reverse('accounts:afterlogin', args=(request.user.id,)))
     if request.method == "POST":
         passageiros_corrida = Passageiros_corrida.objects.filter(corrida=corrida_id, aceito=True)
         for passageiro in passageiros_corrida:
@@ -193,6 +195,7 @@ def delete_corrida(request, usuario_id, corrida_id):
 def create_corrida(request, usuario_id, carona_id):
     if not checa_login(request, usuario_id): return HttpResponseRedirect(reverse('accounts:afterlogin', args=(request.user.id,)))
     carona = get_object_or_404(Carona, pk=carona_id)
+    if not carona.condutor.usuario.id == request.user.id: return HttpResponseRedirect(reverse('accounts:afterlogin', args=(request.user.id,)))
     if request.method == "POST":
             corrida_dict = {}
             corrida_dict['carona'] = carona
@@ -208,10 +211,11 @@ def create_corrida(request, usuario_id, carona_id):
 @login_required
 def aceitar_passageiro_corrida(request, usuario_id, corrida_id, passageiro_id):
     if not checa_login(request, usuario_id): return HttpResponseRedirect(reverse('accounts:afterlogin', args=(request.user.id,)))
+    corrida = get_object_or_404(Corrida, pk=corrida_id)
+    if not corrida.carona.condutor.usuario.id == request.user.id: return HttpResponseRedirect(reverse('accounts:afterlogin', args=(request.user.id,)))
     passageiro_corrida = Passageiros_corrida.objects.filter(corrida=corrida_id, passageiro=passageiro_id)[0]
     passageiro_corrida.aceito = True
     passageiro_corrida.save()
-    corrida = get_object_or_404(Corrida, pk=corrida_id)
     carona = get_object_or_404(Carona, pk=corrida.carona.id)
     corridas = Corrida.objects.filter(carona=carona, ativa=True)
     texto_notificação = f'Você foi aceito na corrida de {carona.condutor.usuario.first_name} {carona.condutor.usuario.last_name} do dia {corrida.dia}'
@@ -224,10 +228,11 @@ def aceitar_passageiro_corrida(request, usuario_id, corrida_id, passageiro_id):
 @login_required
 def rejeitar_passageiro_corrida(request, usuario_id, corrida_id, passageiro_id):
     if not checa_login(request, usuario_id): return HttpResponseRedirect(reverse('accounts:afterlogin', args=(request.user.id,)))
+    corrida = get_object_or_404(Corrida, pk=corrida_id)
+    if not corrida.carona.condutor.usuario.id == request.user.id: return HttpResponseRedirect(reverse('accounts:afterlogin', args=(request.user.id,)))
     passageiro_corrida = Passageiros_corrida.objects.filter(corrida=corrida_id, passageiro=passageiro_id)[0]
     passageiro_corrida.aceito = False
     passageiro_corrida.save()
-    corrida = get_object_or_404(Corrida, pk=corrida_id)
     carona = get_object_or_404(Carona, pk=corrida.carona.id)
     corridas = Corrida.objects.filter(carona=carona, ativa=True)
     texto_notificação = f'Você foi rejeitado na corrida de {carona.condutor.usuario.first_name} {carona.condutor.usuario.last_name} do dia {corrida.dia}'
@@ -241,6 +246,7 @@ def rejeitar_passageiro_corrida(request, usuario_id, corrida_id, passageiro_id):
 def encerrar_corrida(request, usuario_id, corrida_id):
     if not checa_login(request, usuario_id): return HttpResponseRedirect(reverse('accounts:afterlogin', args=(request.user.id,)))
     corrida = get_object_or_404(Corrida, pk=corrida_id)
+    if not corrida.carona.condutor.usuario.id == request.user.id: return HttpResponseRedirect(reverse('accounts:afterlogin', args=(request.user.id,)))
     condutor = get_object_or_404(Condutor, usuario=usuario_id)
     corrida.ativa=False
     corrida.save()
@@ -261,8 +267,16 @@ def encerrar_corrida(request, usuario_id, corrida_id):
 def avalia_passageiro_individual(request, usuario_id, corrida_id, passageiro_id):
     if not checa_login(request, usuario_id): return HttpResponseRedirect(reverse('accounts:afterlogin', args=(request.user.id,)))
     corrida = get_object_or_404(Corrida, pk=corrida_id)
+    if not corrida.carona.condutor.usuario.id == request.user.id: return HttpResponseRedirect(reverse('accounts:afterlogin', args=(request.user.id,)))
     passageiro = get_object_or_404(Passageiro, pk=passageiro_id)
     condutor = get_object_or_404(Condutor, usuario=usuario_id)
+    try:
+        get_object_or_404(Avaliacao_Passageiro,corrida=corrida,avaliador=condutor,avaliado=passageiro,nota=nota)
+        passageiros_corrida = Passageiros_corrida.objects.filter(corrida=corrida_id, aceito=True)
+        context = {'usuario_id': usuario_id, 'corrida':corrida, 'passageiros_corrida':passageiros_corrida}
+        return render(request, 'condutor/avalia_passageiros_corrida.html', context)
+    except:
+        pass
     if request.method == "POST":
         nota = request.POST['nota']
         avaliacao = Avaliacao_Passageiro(corrida=corrida,avaliador=condutor,avaliado=passageiro,nota=nota)
@@ -285,6 +299,7 @@ def recalcula_media_passageiro(passageiro_id):
 def read_notificacao(request, usuario_id, notificacao_id):
     if not checa_login(request, usuario_id): return HttpResponseRedirect(reverse('accounts:afterlogin', args=(request.user.id,)))
     notificacao = get_object_or_404(Notificacao,pk=notificacao_id)
+    if not notificacao.usuario.id == request.user.id: return HttpResponseRedirect(reverse('accounts:afterlogin', args=(request.user.id,)))
     notificacao.visto = True
     notificacao.save()
     condutor = get_object_or_404(Condutor, usuario=usuario_id)
