@@ -10,4 +10,5 @@ Página Inicial
 {% if user.is_authenticated %}
 <li><a href="{% url 'accounts:afterlogin' user.id%}">Login de condutor ou passageiro</a></li>
 {% endif %}
+<li><a href="react/">Sobre</a></li>
 {% endblock content %}
