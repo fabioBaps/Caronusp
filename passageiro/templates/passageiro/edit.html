@@ -41,7 +41,7 @@ Editar perfil
     
   
     <button type="submit">Salvar alterações</button>
-    <a href="{% url 'passageiro:initial' user.id%}">Cancelar</a>
+    <a class="exit" href="{% url 'passageiro:initial' user.id%}">Cancelar</a>
 </form>
 
 {% endblock content %}

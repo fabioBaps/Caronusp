@@ -30,6 +30,7 @@ def initial(request, usuario_id):
 def UpdateView(request, usuario_id):
     if not checa_login(request, usuario_id): return HttpResponseRedirect(reverse('accounts:afterlogin', args=(request.user.id,)))
     usuario = get_object_or_404(Usuario, pk=usuario_id)
+    condutor = get_object_or_404(Condutor, usuario=usuario_id)
     if request.method == "POST":
         usuario.foto = request.FILES.get('foto')
         usuario.username = request.POST['username']
@@ -39,9 +40,11 @@ def UpdateView(request, usuario_id):
         usuario.telefone = request.POST['telefone']
         usuario.RG = request.POST['RG']
         usuario.save()
+        condutor.CNH = request.POST['CNH']
+        condutor.save()
         return HttpResponseRedirect(
             reverse('condutor:initial', args=(usuario.id, )))
-    context = {'usuario': usuario}
+    context = {'usuario': usuario, 'condutor': condutor}
     return render(request, 'condutor/edit_perfil.html', context)
 
 
@@ -216,6 +219,8 @@ def aceitar_passageiro_corrida(request, usuario_id, corrida_id, passageiro_id):
     passageiro_corrida = Passageiros_corrida.objects.filter(corrida=corrida_id, passageiro=passageiro_id)[0]
     passageiro_corrida.aceito = True
     passageiro_corrida.save()
+    corrida.vagas -= 1
+    corrida.save()
     carona = get_object_or_404(Carona, pk=corrida.carona.id)
     corridas = Corrida.objects.filter(carona=carona, ativa=True)
     texto_notificação = f'Você foi aceito na corrida de {carona.condutor.usuario.first_name} {carona.condutor.usuario.last_name} do dia {corrida.dia}'

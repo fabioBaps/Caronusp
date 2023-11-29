@@ -1,15 +1,20 @@
 {% extends 'base.html' %}
+
+{% block title %}
+Escolha de ator
+{% endblock title %}
+
 {% block content %}
-<div class="afterlogin">
+<div class="flex">
 {% if user.is_condutor %}
-    <a href="{% url 'condutor:initial' user.id%}">Logar como condutor</a>
+    <a class="flex" style="height: 25rem; width: 40rem" href="{% url 'condutor:initial' user.id%}">Logar como condutor</a>
 {% else %}
-    <a href="{% url 'accounts:condutor' user.id%}">Cadastrar condutor</a>
+    <a class="flex" style="height: 25rem; width: 40rem" href="{% url 'accounts:condutor' user.id%}">Cadastrar condutor</a>
 {% endif %}
 {% if user.is_passageiro %}
-    <a href="{% url 'passageiro:initial' user.id%}">Logar como passageiro</a>
+    <a class="flex" style="height: 25rem; width: 40rem" href="{% url 'passageiro:initial' user.id%}">Logar como passageiro</a>
 {% else %}
-    <form method="post" action="{% url 'accounts:passageiro' user.id %}">
+    <form class="flex" style="height: 25rem; width: 40rem" method="post" action="{% url 'accounts:passageiro' user.id %}">
         {% csrf_token %}
         <button type="submit">Cadastrar passageiro</button>
     </form>

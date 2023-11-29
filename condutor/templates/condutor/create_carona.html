@@ -1,4 +1,9 @@
 {% extends 'base.html' %}
+
+{% block title %}
+Criar carona
+{% endblock title %}
+
 {% block content %}
 <h2>Publicar carona</h2>
 <form method="post" action="{% url 'condutor:create_carona' user.id%}">
@@ -9,7 +14,7 @@
       </p>
       <p>
         <label for="id_horario_partida">Horário de partida:</label>
-        <input type="text" name="horario_partida" id="id_horario_partida" />
+        <input type="time" name="horario_partida" id="id_horario_partida" />
     </p>
     <p>
       <label for="id_local_chegada">Local de chegada:</label>
@@ -17,7 +22,7 @@
     </p>
     <p>
       <label for="id_horario_chegada">Horário de chegada:</label>
-      <input type="text" name="horario_chegada" id="id_horario_chegada" />
+      <input type="time" name="horario_chegada" id="id_horario_chegada" />
     </p>
     <p>
       <label for="id_vagas">Vagas disponíveis no carro:</label>
@@ -25,7 +30,7 @@
     </p>
     <p>
       <label for="id_placa">placa do carro:</label>
-        <input type="text" name="placa" id="id_placa" />
+        <input maxlength='7'  type="text" name="placa" id="id_placa" />
     </p>
     <p>
         <label for="num_corridas">Número de corridas:</label>
@@ -41,8 +46,8 @@
     </p>
     
     
-    <button><a href="{% url 'condutor:initial' user.id%}">Cancelar</a></button>
     <button type="submit">Criar</button>
+    <a class="exit" href="{% url 'condutor:initial' user.id%}">Cancelar</a>
   </form>
 
   

@@ -121,6 +121,7 @@ def Search_RequestView(request, usuario_id, corrida_id=None):
                 vagas__gt=0,
                 carona__in = caronas
                 )
+            corrida_list = [item for item in corrida_list if item.carona.condutor.usuario.id != usuario_id]
             htmlEQ = {
                 'True': {'title': 'Corrida solicitada'},
                 'False': {'title': 'Solicitar corrida'}

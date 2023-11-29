@@ -1,4 +1,9 @@
 {% extends 'base.html' %}
+
+{% block title %}
+Detalhes da carona
+{% endblock title %}
+
 {% block content %}
 
 <h1> Carona </h1>
@@ -14,19 +19,18 @@
   Placa {{carona.placa_veiculo}}
   <br>
 </h3>
-<a href="{% url 'condutor:edit_carona' user.id carona.id %}">Editar detalhes da carona</a>
-<br>
-<a href="{% url 'condutor:initial' user.id %}">Voltar para tela inicial</a>
-<br>
-<a href="{% url 'condutor:create_corrida' user.id carona.id %}">Criar nova corrida nesta carona</a>
+<div class="flex2">
+  <a href="{% url 'condutor:edit_carona' user.id carona.id %}">Editar detalhes da carona</a>
+  <a href="{% url 'condutor:create_corrida' user.id carona.id %}">Criar nova corrida nesta carona</a>
+</div>
 
 <h1> Corridas ativas dessa carona </h1>
 
 {% for info_corrida in info_corridas_passageiros %}
   <h2>corrida do dia {{ info_corrida.corrida.dia }} </h2>
 
-  <a href="{% url 'condutor:delete_corrida' user.id info_corrida.corrida.id %}">Cancelar corrida</a>
-  <a href="{% url 'condutor:encerrar_corrida' user.id info_corrida.corrida.id %}">Encerrar corrida</a>
+  <a class="exit" href="{% url 'condutor:delete_corrida' user.id info_corrida.corrida.id %}">Cancelar corrida</a>
+  <a class="exit" href="{% url 'condutor:encerrar_corrida' user.id info_corrida.corrida.id %}">Encerrar corrida</a>
 
   <h3>Passageiros da corrida</h3>
   {% if info_corrida.passageiros_aceitos %}
@@ -40,13 +44,16 @@
   <h3>Passageiros solicitando entrada</h3>
   {% if info_corrida.passageiros_a_aceitar %}
     {% for passageiro_solicitante in info_corrida.passageiros_a_aceitar %}
-      <p>Passageiro solicitando entrada: {{passageiro_solicitante.usuario.first_name}} {{passageiro_solicitante.usuario.last_name}}, Email {{passageiro_solicitante.usuario.email}}, Nota {{passageiro_solicitante.nota_media}}</p>
+    <div class="flex">
+      <p>Passageiro solicitando entrada: {{passageiro_solicitante.usuario.first_name}} {{passageiro_solicitante.usuario.last_name}}, Telefone: {{passageiro_solicitante.usuario.telefone}}, Nota: {{passageiro_solicitante.nota_media}}</p>
       <a href="{% url 'condutor:aceitar_passageiro_corrida' user.id info_corrida.corrida.id passageiro_solicitante.id %}">Aceitar</a>
-      <a href="{% url 'condutor:rejeitar_passageiro_corrida' user.id info_corrida.corrida.id passageiro_solicitante.id %}">Rejeitar</a>
+      <a class="exit" href="{% url 'condutor:rejeitar_passageiro_corrida' user.id info_corrida.corrida.id passageiro_solicitante.id %}">Rejeitar</a>
+    </div>
     {% endfor %}
     {% else %}
     <p>Sem solicitações</p>
   {% endif %}
 
   {% endfor %}
+  <a class="voltar" href="{% url 'condutor:initial' user.id %}">Voltar</a>
 {% endblock content %}

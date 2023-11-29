@@ -6,25 +6,26 @@ Minhas corridas
 
 {% block content %}
 <h1>Lista de corridas {{ title }}</h1>
-<a href="{% url 'passageiro:list-accepted' user.id 'accepted' %}">Aceitas</a>
-<a href="{% url 'passageiro:list-requested' user.id 'requested' %}">Solicitadas</a>
-<a href="{% url 'passageiro:list-rejected' user.id 'rejected' %}">Rejeitadas</a>
-<a href="{% url 'passageiro:list-ended' user.id 'ended' %}">Finalizadas</a>
+<div class="flex">
+    <a href="{% url 'passageiro:list-accepted' user.id 'accepted' %}">Aceitas</a>
+    <a href="{% url 'passageiro:list-requested' user.id 'requested' %}">Solicitadas</a>
+    <a href="{% url 'passageiro:list-rejected' user.id 'rejected' %}">Rejeitadas</a>
+    <a href="{% url 'passageiro:list-ended' user.id 'ended' %}">Finalizadas</a>
+</div>
 {% if corrida_list %}
 <section>
     {% for corrida in corrida_list %}
-    <article>
-        <p>{{ corrida.id }}: {{ corrida.dia }}</p>
+    <article class="flex">
+        <p>Corrida em {{ corrida.dia }} saindo de {{corrida.carona.local_partida}} às {{corrida.carona.horario_partida}} 
+            para {{corrida.carona.local_chegada}} às {{corrida.carona.horario_chegada}} || Placa: {{corrida.carona.placa_veiculo}}</p>
             <a href="{% url 'passageiro:detail' user.id corrida.id %}">Ver detalhes</a>
-            <p>Informações da corrida</p>
-            {% if corrida.aval %} <p> Você avaliou o condutor com nota {{corrida.aval.first.nota}}
-                {% elif not corrida.ativa %} <a href="{% url 'passageiro:rate' user.id corrida.id %}">Avaliar</a>
-                <p>Avalie seu condutor na corrida!</p>{% endif %}
+            {% if corrida.aval %} <p> Você avaliou o condutor com nota {{corrida.aval.first.nota}}</p>
+            {% elif not corrida.ativa %} <a href="{% url 'passageiro:rate' user.id corrida.id %}">Avaliar</a>{% endif %}
     </article>
     {% endfor %}
 </section>
 {% else %}
 <p>Você não tem corridas para essa categoria</p>
 {% endif %}
-<a href="{% url 'passageiro:initial' user.id %}">Voltar</a>
+<a class="voltar" href="{% url 'passageiro:initial' user.id %}">Voltar</a>
 {% endblock %}

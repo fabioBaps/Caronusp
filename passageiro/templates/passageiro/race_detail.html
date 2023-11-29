@@ -22,6 +22,6 @@ Detalhes da corrida
 </h3>
 {% if corrida.contains and corrida.ativa %} <a class="exit" href="{% url 'passageiro:leave' user.id corrida.id %}">Sair da corrida</a>
 {% endif %}
-<a onclick="history.back()">Voltar</a>
+<a class="voltar" onclick="history.back()">Voltar</a>
 {% endblock content %}
 

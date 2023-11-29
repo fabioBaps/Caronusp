@@ -33,16 +33,17 @@ Pesquisar
 {% if corrida_list %}
 <section>
     {% for corrida in corrida_list %}
-    <article>
-        <p>{{ corrida.id }}: {{ corrida.dia }} {{ corrida.carona.local_partida }} ({{ corrida.carona.horario_partida }})
-            para {{ corrida.carona.local_chegada }} ({{ corrida.carona.horario_chegada }}) : Vagas {{ corrida.vagas }}</p>
-            <a href="{% url 'passageiro:detail' user.id corrida.id %}">Ver detalhes</a>
-            <form method="post" action="{% url 'passageiro:request' user.id corrida.id%}">
-                {% csrf_token %}
-                <button
-                {% if corrida.exists %}disabled{% endif %}
-                {% if not corrida.exists %}type="submit"{% endif %}>
-                {{corrida.title}}
+    <article class="flex">
+        <p> {{ corrida.dia }} saindo de {{ corrida.carona.local_partida }} ({{ corrida.carona.horario_partida }})
+            para {{ corrida.carona.local_chegada }} ({{ corrida.carona.horario_chegada }}) || Vagas: {{ corrida.vagas }}
+        </p>
+        <a href="{% url 'passageiro:detail' user.id corrida.id %}">Ver detalhes</a>
+        <form method="post" action="{% url 'passageiro:request' user.id corrida.id%}">
+            {% csrf_token %}
+            <button
+            {% if corrida.exists %}disabled{% endif %}
+            {% if not corrida.exists %}type="submit"{% endif %}>
+            {{corrida.title}}
             </button>
         </form>
     </article>
@@ -52,5 +53,5 @@ Pesquisar
 <p>Não foi encontrada nenhuma corrida para a busca</p>
 {% endif %}
 
-<a href="{% url 'passageiro:initial' user.id %}">Voltar</a>
+<a class="voltar" href="{% url 'passageiro:initial' user.id %}">Voltar</a>
 {% endblock content %}

@@ -1,26 +1,43 @@
 {% extends 'base.html' %}
+
+{% block title %}
+Condutor
+{% endblock title %}
+
 {% block content %}
 
-<h1>Condutorrrrrrrr</h1>
-<p>{{ user.username }}</p>
-<p>{{ user.id }}</p>
-<button><a href="{% url 'condutor:edit_perfil' user.id %}">Editar perfil</a></button>
-<button><a href="{% url 'condutor:create_carona' user.id %}">Criar carona</a></button>
-<button><a href="{% url 'condutor:list_corridas' user.id %}">Ver histórico de corridas</a></button>
+<h1>Olá {{ user.first_name }} {{ user.last_name }}! Você está logado como condutor</h1>
+<div class="grid">
+    <a href="{% url 'condutor:edit_perfil' user.id %}">Editar perfil</a>
+    <p>Editar suas informações pessoais</p>
+    <a href="{% url 'condutor:create_carona' user.id %}">Criar carona</a>
+    <p>Criar uma carona para ir e voltar até onde quiser</p>
+    <a href="{% url 'condutor:list_corridas' user.id %}">Ver histórico de corridas</a>
+    <p>Aqui você pode ver as suas corridas finalizadas</p>
+    <a href="{% url 'accounts:afterlogin' user.id %}">Escolher ator</a>
+    <p>Voltar para a tela de escolha de login</p>
+</div>
 
 
 {% if notificacoes %}
-{% for notificacao in notificacoes %}
-<h1>Notificações</h1>
-<p>{{ notificacao.texto }}</p>
-<button><a href="{% url 'condutor:read_notificacao' user.id notificacao.id %}">Marcar como lida</a></button>
-{% endfor %}
+    <h1>Notificações</h1>
+    {% for notificacao in notificacoes %}
+        <div class="notificacao" >
+            <label class="flex"></label>
+            <p>{{ notificacao.texto }}</p>
+            <a href="{% url 'condutor:read_notificacao' user.id notificacao.id %}">Marcar como lida</a>
+        </div>
+    {% endfor %}
 {% endif %}
 
 <h1>Minhas caronas</h1>
 {% for carona in caronas %}
-<p>Carona saindo de {{ carona.local_partida }} as {{carona.horario_partida}}</p>
-<button><a href="{% url 'condutor:detail_carona' user.id carona.id %}">Detalhes</a></button>
+    <div class="flex">
+        <p>Carona saindo de {{ carona.local_partida }} às {{carona.horario_partida}} para
+            {{ carona.local_chegada }} às {{carona.horario_chegada}}
+        </p>
+        <a href="{% url 'condutor:detail_carona' user.id carona.id %}">Ver detalhes</a>
+    </div>
 {% endfor %}
 
 {% endblock content %}

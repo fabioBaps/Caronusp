@@ -16,7 +16,7 @@
 
 <body>
     <header id="cabecalho-principal">
-        <h1><a class='limparCss' href="{% url 'index' %}"> <i>Caronusp</i> </a></h1>
+        <h1><a style="all: unset; cursor: pointer;" href="{% url 'index' %}"> <i>Caronusp</i> </a></h1>
         <nav id="navegacao-principal">
             <ul>
                 {% if user.is_authenticated %}

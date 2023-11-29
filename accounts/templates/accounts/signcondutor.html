@@ -14,6 +14,7 @@ Criar Condutor
         <input type="text" name="CNH" id="id_CNH" maxlength='11' />
       </p>
     <button type="submit">Criar</button>
+    <a class="voltar" href="{% url 'accounts:afterlogin' user.id %}">Voltar</a>
 </form>
 
 {% endblock content %} 

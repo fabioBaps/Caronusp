@@ -6,7 +6,8 @@ Avaliar condutor
 
 {% block content %}
 
-<h1>Avalie o condutor {{corrida.condutor.usuario.first_name}} {{corrida.condutor.usuario.last_name}} em relação a corrida do dia {{corrida.dia}}</h1>
+<h1>Avalie o condutor {{corrida.condutor.usuario.first_name}} {{corrida.condutor.usuario.last_name}} 
+  em relação a corrida do dia {{corrida.dia}}</h1>
 
 
 <form method="post" action="{% url 'passageiro:rate' user.id corrida.id %}">
@@ -24,5 +25,5 @@ Avaliar condutor
 
 
 <br>
-<a href="{% url 'passageiro:list-ended' user.id 'ended' %}">Voltar</a>
+<a class="voltar" href="{% url 'passageiro:list-ended' user.id 'ended' %}">Voltar</a>
 {% endblock content %}
