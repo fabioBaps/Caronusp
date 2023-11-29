@@ -31,6 +31,7 @@ Detalhes da carona
 
   <a class="exit" href="{% url 'condutor:delete_corrida' user.id info_corrida.corrida.id %}">Cancelar corrida</a>
   <a class="exit" href="{% url 'condutor:encerrar_corrida' user.id info_corrida.corrida.id %}">Encerrar corrida</a>
+  <a href="{% url 'chat:chat_corrida' user.id info_corrida.corrida.id 0 %}"> Chat </a>
 
   <h3>Passageiros da corrida</h3>
   {% if info_corrida.passageiros_aceitos %}

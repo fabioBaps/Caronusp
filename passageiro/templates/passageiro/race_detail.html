@@ -25,3 +25,6 @@ Detalhes da corrida
 <a class="voltar" onclick="history.back()">Voltar</a>
 {% endblock content %}
 
+<button><a href="{% url 'chat:chat_corrida' user.id corrida.id 1 %}"> Chat </a></button>
+
+

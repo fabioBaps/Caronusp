@@ -258,13 +258,13 @@ def encerrar_corrida(request, usuario_id, corrida_id):
     passageiros_corrida = Passageiros_corrida.objects.filter(corrida=corrida_id, aceito=True)
     passageiros_corrida_nao_avaliados = []
     for passageiro in passageiros_corrida:
-        texto_notificação = f'A corrida de {condutor.usuario.first_name} {condutor.usuario.last_name} do dia {corrida.dia} foi encerrada. Avalie o condutor!'
-        notificacao = Notificacao(usuario=passageiro.passageiro.usuario, texto=texto_notificação, para_condutor=False)
-        notificacao.save()
         try: # ja existe avaliacao?
             get_object_or_404(Avaliacao_Passageiro, corrida_id=corrida_id, avaliado_id=passageiro.passageiro.id)
-        except: # se nao, add ele nos nao avaliados
+        except: # se nao, add ele nos nao avaliados e manda notificacao
             passageiros_corrida_nao_avaliados.append(passageiro)
+            texto_notificação = f'A corrida de {condutor.usuario.first_name} {condutor.usuario.last_name} do dia {corrida.dia} foi encerrada. Avalie o condutor!'
+            notificacao = Notificacao(usuario=passageiro.passageiro.usuario, texto=texto_notificação, para_condutor=False)
+            notificacao.save()
     context = {'usuario_id': usuario_id, 'corrida':corrida, 'passageiros_corrida':passageiros_corrida_nao_avaliados}
     return render(request, 'condutor/avalia_passageiros_corrida.html', context)
 
