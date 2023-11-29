@@ -2,3 +2,7 @@ db.sqlite3
 __pycache__/
 _env.py
 uploads/
+node_modules
+package-lock.json
+dist
+webpack-stats.json

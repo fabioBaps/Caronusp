@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     'condutor.apps.CondutorConfig',
     'passageiro.apps.PassageiroConfig',
     'chat.apps.ChatConfig',
+    'rest_framework',
+    'webpack_loader',
 
 ]
 
@@ -128,10 +130,18 @@ BASE_COUNTRY = 'BR'
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [ os.path.join(BASE_DIR, 'static'), ]
+STATICFILES_DIRS = [ os.path.join(BASE_DIR, 'static'),
+                    os.path.join(BASE_DIR, 'assets') ]
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+WEBPACK_LOADER = {
+    'DEFAULT': {
+        'BUNDLE_DIR_NAME': 'dist/',
+        'STATS_FILE': os.path.join(BASE_DIR, 'webpack-stats.json'),
+    }
+}
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
