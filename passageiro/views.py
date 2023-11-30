@@ -4,10 +4,11 @@ from django.urls import reverse
 from accounts.models import Usuario, Condutor, Passageiro, Corrida, Passageiros_corrida, Carona, Avaliacao_Condutor, Notificacao
 from django.contrib.auth.decorators import login_required
 import googlemaps
-from _env import GOOGLE_API_KEY
 import requests
 from datetime import datetime, timedelta
 import numpy as np
+import os
+GOOGLE_API_KEY = os.environ['GOOGLE_API_KEY']
 
 @login_required
 def initial(request, usuario_id):
