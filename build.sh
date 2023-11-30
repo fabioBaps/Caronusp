@@ -4,7 +4,7 @@ set -o errexit
 
 npm install
 
-npm run build
+npm run start
 
 pip install -r requirements.txt
 
