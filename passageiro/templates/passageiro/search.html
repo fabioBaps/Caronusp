@@ -1,25 +1,28 @@
 {% extends 'base.html' %}
 
+{% block title %}
+Pesquisar
+{% endblock title %}
+
 {% block content %}
-<a href="{% url 'passageiro:initial' user.id %}">< Voltar</a>
 <h2>Busca de corridas</h2>
 <form action="{% url 'passageiro:search' user.id %}" method="post">
     {% csrf_token %}
     <p>
         <label for="id_dia">Dia:</label>
-        <input type="date" name="dia" id="id_dia" min="{% now "Y-m-d" %}" />
+        <input type="date" name="dia" id="id_dia" min="{% now "Y-m-d" %}" required/>
     </p>
     <p>
         <label for="id_local_partida">Local de partida:</label>
-        <input type="text" name="local_partida" id="id_local_partida" />
+        <input type="text" name="local_partida" id="id_local_partida" required/>
     </p>
     <p>
         <label for="id_local_chegada">Local de chegada:</label>
-        <input type="text" name="local_chegada" id="id_local_chegada" />
+        <input type="text" name="local_chegada" id="id_local_chegada" required/>
     </p>
     <p>
         <label for="id_horario_chegada">Horário de chegada:</label>
-        <input type="time" name="horario_chegada" id="id_horario_chegada" />
+        <input type="time" name="horario_chegada" id="id_horario_chegada" required/>
     </p>
     <button type="submit">Buscar</button>
 </form>
@@ -30,9 +33,10 @@
 {% if corrida_list %}
 <section>
     {% for corrida in corrida_list %}
-    <article>
-        <p>{{ corrida.id }}: {{ corrida.dia }} {{ corrida.carona.local_partida }} ({{ corrida.carona.horario_partida }})
-             para {{ corrida.carona.local_chegada }} ({{ corrida.carona.horario_chegada }}) : Vagas {{ corrida.vagas }}</p>
+    <article class="flex">
+        <p> Saindo de {{ corrida.carona.local_partida }} ({{ corrida.carona.horario_partida }})
+            para {{ corrida.carona.local_chegada }} ({{ corrida.carona.horario_chegada }}) || Vagas: {{ corrida.vagas }}
+        </p>
         <a href="{% url 'passageiro:detail' user.id corrida.id %}">Ver detalhes</a>
         <form method="post" action="{% url 'passageiro:request' user.id corrida.id%}">
             {% csrf_token %}
@@ -46,7 +50,8 @@
     {% endfor %}
 </section>
 {% else %}
-    <p>Não foi encontrada nenhuma corrida para a busca.</p>
+<p>Não foi encontrada nenhuma corrida para a busca</p>
 {% endif %}
 
+<a class="voltar" href="{% url 'passageiro:initial' user.id %}">Voltar</a>
 {% endblock content %}

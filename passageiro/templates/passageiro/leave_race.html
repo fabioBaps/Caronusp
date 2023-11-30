@@ -1,11 +1,17 @@
-<form method="POST" action="{% url 'passageiro:leave' user.id corrida.id %}">
+{% extends 'base.html' %}
+
+{% block title %}
+Sair da corrida
+{% endblock title %}
+
+{% block content %}
+
+  <form class="flex2" method="POST" action="{% url 'passageiro:leave' user.id corrida.id %}">
     {% csrf_token %}
     <p>
       Confirmar - Sair da corrida do dia {{corrida.dia}}?
     </p>
-    <p>
-      <label for="leave"><input type="checkbox" id="leave" name="leave" required> Sim, desejo sair.</label>
-    </p>
-    <button type="submit">Sair</button>
+    <button class="exit" type="submit">Sair</button>
   </form>
-  <button><a href="{% url 'passageiro:detail' user.id corrida.carona.id%}">Voltar para a tela da corrida</a></button>
+  <a class="voltar" href="{% url 'passageiro:list-accepted' user.id 'accepted' %}">Voltar para as corridas aceitas</a>
+{% endblock content %}

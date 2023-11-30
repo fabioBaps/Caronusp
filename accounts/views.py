@@ -13,6 +13,8 @@ class UsuarioCreationForm(UserCreationForm):
         fields = UserCreationForm.Meta.fields + ('first_name','last_name','telefone', 'RG', 'email', 'foto')
 
 def signup(request):
+    if request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('accounts:afterlogin', args=(request.user.id, )))
     if request.method == 'POST':
         form = UsuarioCreationForm(request.POST, request.FILES)
         if form.is_valid():

@@ -6,12 +6,12 @@ Editar perfil
 
 {% block content %}
 <h1>Atualizar dados do perfil</h1>
-<form method="post" enctype="multipart/form-data" action="{% url 'passageiro:edit' usuario.id%}">
+<form method="post" enctype="multipart/form-data" action="{% url 'condutor:edit_perfil' usuario.id%}">
   {% csrf_token %}
     <p>
         <label for="id_foto">Foto:</label>
         <img src="{{ usuario.foto.url }}" style="max-width: 450px; max-height: 300px">
-        <input type="file" name="foto" id="id_foto"/>
+        <input type="file" name="foto" id="id_foto" value="{{usuario.foto.url}}"/>
     </p>
     <p>
         <label for="id_username">Nome de usuário:</label>
@@ -37,11 +37,15 @@ Editar perfil
         <label for="id_RG">RG:</label>
         <input maxlength=9 type="text" name="RG" id="id_RG" value="{{usuario.RG}}" />
     </p>
+    <p>
+        <label for="id_CNH">CNH:</label>
+        <input maxlength=11 type="text" name="CNH" id="id_CNH" value="{{condutor.CNH}}" />
+    </p>
 
     
   
     <button type="submit">Salvar alterações</button>
-    <a class="exit" href="{% url 'passageiro:initial' user.id%}">Cancelar</a>
+  <a class="exit" href="{% url 'condutor:initial' user.id%}">Cancelar</a>
 </form>
 
 {% endblock content %}

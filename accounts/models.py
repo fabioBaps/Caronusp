@@ -4,15 +4,15 @@ from django.contrib.auth.models import AbstractUser, BaseUserManager
 class UsuarioManager(BaseUserManager):
     use_in_migrations = True
 
-    def create_user(self, email, password, **extra_fields):
+    def create_user(self, email, username, password, **extra_fields):
         if not email:
             raise ValueError('Users must have an email address')
-        user = self.model(email=self.normalize_email(email), **extra_fields)
+        user = self.model(email=self.normalize_email(email), username=username,  **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, email, password, **extra_fields):
+    def create_superuser(self, email, username, password, **extra_fields):
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
 
@@ -21,7 +21,7 @@ class UsuarioManager(BaseUserManager):
         if extra_fields.get('is_superuser') is False:
             raise ValueError('Superuser must have is_superuser=True.')
 
-        return self.create_user(email, password, **extra_fields)
+        return self.create_user(email, username, password, **extra_fields)
     
 class Usuario(AbstractUser):
     telefone = models.CharField(max_length=11)
@@ -108,10 +108,10 @@ class Mensagem(models.Model):
     
 class Notificacao(models.Model):
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
-    corrida = models.ForeignKey(Corrida, on_delete=models.CASCADE)
     texto = models.TextField()
     hora = models.DateTimeField(auto_now_add=True)
     visto = models.BooleanField(default=False)
+    para_condutor = models.BooleanField()
 
     def __str__(self):
-        return f'"{self.id}" - {self.usuario} - {self.corrida} - {self.texto} - {self.hora}'
+        return f'"{self.id}" - {self.usuario} - {self.texto} - {self.hora} - {self.visto} - {self.para_condutor}'

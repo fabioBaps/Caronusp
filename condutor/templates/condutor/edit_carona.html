@@ -1,4 +1,9 @@
 {% extends 'base.html' %}
+
+{% block title %}
+Editar carona
+{% endblock title %}
+
 {% block content %}
 <h2>Atualizar dados da carona</h2>
 <form method="post" action="{% url 'condutor:edit_carona' user.id carona.id%}">
@@ -25,8 +30,8 @@
   </p>
     
   
-  <button><a href="{% url 'condutor:detail_carona' user.id carona.id%}">Cancelar</a></button>
   <button type="submit">Salvar alterações</button>
+  <a class="exit" href="{% url 'condutor:detail_carona' user.id carona.id%}">Cancelar</a>
 </form>
 
 {% endblock content %}

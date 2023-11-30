@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Histórico de corridas
+{% endblock title %}
+
+{% block content %}
+    <h1>Histórico de corridas {{ title }}</h1>
+    {% if corrida_list %}
+        <section>
+        {% for corrida in corrida_list %}
+            <article class="flex">
+                <p>Corrida em {{ corrida.dia }} saindo de {{corrida.carona.local_partida}} às {{corrida.carona.horario_partida}} 
+                    para {{corrida.carona.local_chegada}} às {{corrida.carona.horario_chegada}} || Placa: {{corrida.carona.placa_veiculo}}</p>
+            </article>
+        {% endfor %}
+        </section>
+        {% else %}
+        <p>Você não tem corridas para essa categoria.</p>
+    {% endif %}
+    <a class="voltar" href="{% url 'condutor:initial' user.id %}"> Voltar</a>
+{% endblock %}

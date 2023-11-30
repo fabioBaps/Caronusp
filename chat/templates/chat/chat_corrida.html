@@ -2,17 +2,17 @@
 
 {% block content %}
     <h1>Chat da Corrida</h1>
+    <a class="voltar" onclick="history.back()">Voltar</a>
+    
 
     {% for mensagem in mensagens %}
-        <p>{{ mensagem.usuario }} ({{ mensagem.hora }}): {{ mensagem.texto }}</p>
+        <p>{{ mensagem.usuario.first_name }} {{ mensagem.usuario.last_name }}: {{ mensagem.texto }}</p>
     {% endfor %}
 
-    <form method="post" action="{% if corrida.id %}{% url 'chat:chat_corrida' corrida_id=corrida.id %}{% endif %}">
+    <form method="post" action="{% if corrida.id %}{% url 'chat:chat_corrida' user.id corrida.id type_actor %}{% endif %}">
         {% csrf_token %}
         <label for="{{ form.texto.id_for_label }}">Mensagem:</label>
         {{ form.texto }}
         <button type="submit">Enviar Mensagem</button>
     </form>
-
-    <button onclick="history.back()">Voltar</button>
 {% endblock %}

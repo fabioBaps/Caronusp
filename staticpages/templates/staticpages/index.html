@@ -5,10 +5,12 @@ Página Inicial
 {% endblock title %}
 
 {% block content %}
-<h1><i>Caronusp</i></h1>
-<p>A sua corrida diária!</p>
+<div class='index'>
+<h1>Caronusp</h1>
+A sua corrida diária!</h2>
 {% if user.is_authenticated %}
-<li><a href="{% url 'accounts:afterlogin' user.id%}">Login de condutor ou passageiro</a></li>
+<a href="{% url 'accounts:afterlogin' user.id%}">Login de condutor ou passageiro</a>
 {% endif %}
 <li><a href="react/">Sobre</a></li>
+</div>
 {% endblock content %}

@@ -1,20 +1,22 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
 from django.urls import reverse
-from accounts.models import Usuario, Condutor, Passageiro, Corrida, Passageiros_corrida, Carona, Avaliacao_Condutor
+from accounts.models import Usuario, Condutor, Passageiro, Corrida, Passageiros_corrida, Carona, Avaliacao_Condutor, Notificacao
 from django.contrib.auth.decorators import login_required
 import googlemaps
-from _env import GOOGLE_API_KEY
 import requests
 from datetime import datetime, timedelta
 import numpy as np
+import os
+GOOGLE_API_KEY = os.environ['GOOGLE_API_KEY']
 
 @login_required
 def initial(request, usuario_id):
     user = request.user
     usuario = get_object_or_404(Usuario, pk=usuario_id)
     if usuario.is_passageiro and usuario.id == user.id:
-        context = {'usuario': usuario}
+        notificacoes = Notificacao.objects.filter(usuario=usuario, para_condutor=False, visto=False)
+        context = {'usuario': usuario, 'notificacoes':notificacoes}
         return render(request, 'passageiro/initial.html', context)
     else:
         return HttpResponseRedirect(
@@ -25,7 +27,8 @@ def UpdateView(request, usuario_id):
     user = request.user
     usuario = get_object_or_404(Usuario, pk=usuario_id)
     if request.method == "POST":
-        usuario.foto = request.FILES.get('foto')
+        if request.FILES.get('foto'):
+            usuario.foto = request.FILES.get('foto')
         usuario.username = request.POST['username']
         usuario.first_name = request.POST['first_name']
         usuario.last_name = request.POST['last_name']
@@ -49,7 +52,7 @@ def Search_RequestView(request, usuario_id, corrida_id=None):
     if usuario.is_passageiro and usuario.id == user.id:
         passageiro = Passageiro.objects.filter(usuario_id=usuario.id)[0]
         context = {}
-        if request.method == 'POST':
+        if request.method == 'POST' and request.POST.get('horario_chegada'):
             api_key = GOOGLE_API_KEY
             chegada = request.POST.get('local_chegada')
             chegada_url = f"https://maps.googleapis.com/maps/api/place/textsearch/json?query={chegada}&key={api_key}"
@@ -120,6 +123,7 @@ def Search_RequestView(request, usuario_id, corrida_id=None):
                 vagas__gt=0,
                 carona__in = caronas
                 )
+            corrida_list = [item for item in corrida_list if item.carona.condutor.usuario.id != usuario_id]
             htmlEQ = {
                 'True': {'title': 'Corrida solicitada'},
                 'False': {'title': 'Solicitar corrida'}
@@ -134,6 +138,10 @@ def Search_RequestView(request, usuario_id, corrida_id=None):
             corrida = get_object_or_404(Corrida, pk=corrida_id)
             passageiro_corrida = Passageiros_corrida(passageiro = passageiro, corrida = corrida)
             passageiro_corrida.save()
+
+            texto_notificação = f'{passageiro.usuario.first_name} {passageiro.usuario.last_name} solicitou entrada na sua corrida de {corrida.dia}. Responda sua solicitação!'
+            notificacao = Notificacao(usuario=corrida.carona.condutor.usuario, texto=texto_notificação, para_condutor=True)
+            notificacao.save()
                 
         return render(request, 'passageiro/search.html', context)
     else:
@@ -240,3 +248,30 @@ def recalcula_media_condutor(condutor_id):
     nota_media = np.mean([item.nota for item in avaliacoes ])
     condutor.nota_media = nota_media
     condutor.save()
+
+
+def read_notificacao(request, usuario_id, notificacao_id):
+    notificacao = get_object_or_404(Notificacao,pk=notificacao_id)
+    notificacao.visto = True
+    notificacao.save()
+    user = request.user
+    usuario = get_object_or_404(Usuario, pk=usuario_id)
+    if usuario.is_passageiro and usuario.id == user.id:
+        notificacoes = Notificacao.objects.filter(usuario=usuario, para_condutor=False, visto=False)
+        context = {'usuario': usuario, 'notificacoes':notificacoes}
+        return render(request, 'passageiro/initial.html', context)
+    else:
+        return HttpResponseRedirect(
+            reverse('accounts:afterlogin', args=(user.id, )))
+        
+@login_required
+def condutordetail(request, usuario_id, condutor_id):
+    user = request.user
+    usuario = get_object_or_404(Usuario, pk=usuario_id)
+    condutor = get_object_or_404(Condutor, pk=condutor_id)
+    if usuario.is_passageiro and usuario.id == user.id:
+        context = {'usuario': usuario, 'condutor': condutor}
+        return render(request, 'passageiro/detail_condutor.html', context)
+    else:
+        return HttpResponseRedirect(
+            reverse('accounts:afterlogin', args=(user.id, )))
