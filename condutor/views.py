@@ -20,7 +20,12 @@ def checa_login(request, usuario_id):
 def initial(request, usuario_id):
     if not checa_login(request, usuario_id): return HttpResponseRedirect(reverse('accounts:afterlogin', args=(request.user.id,)))
     condutor = get_object_or_404(Condutor, usuario=usuario_id)
-    caronas = Carona.objects.filter(condutor=condutor)
+    todas_caronas = Carona.objects.filter(condutor=condutor)
+    caronas = []
+    for carona in todas_caronas:
+        corridas = Corrida.objects.filter(carona=carona, ativa=True)
+        if corridas:
+            caronas.append(carona)
     notificacoes = Notificacao.objects.filter(usuario=condutor.usuario, para_condutor=True, visto=False)
     context = {'usuario_id': usuario_id, 'caronas':caronas,'notificacoes':notificacoes}
     return render(request, 'condutor/initial.html', context)
@@ -32,7 +37,8 @@ def UpdateView(request, usuario_id):
     usuario = get_object_or_404(Usuario, pk=usuario_id)
     condutor = get_object_or_404(Condutor, usuario=usuario_id)
     if request.method == "POST":
-        usuario.foto = request.FILES.get('foto')
+        if request.FILES.get('foto'):
+            usuario.foto = request.FILES.get('foto')
         usuario.username = request.POST['username']
         usuario.first_name = request.POST['first_name']
         usuario.last_name = request.POST['last_name']
@@ -172,8 +178,8 @@ def edit_carona(request, usuario_id, carona_id):
         return HttpResponseRedirect(
             reverse('condutor:detail_carona', args=(usuario_id, carona_id )))
     corridas = Corrida.objects.filter(carona=carona)
-    horario_partida_formatado = str(carona.horario_partida).split(':00')[0]
-    horario_chegada_formatado = str(carona.horario_chegada).split(':00')[0]
+    horario_partida_formatado = str(carona.horario_partida)[:-3]
+    horario_chegada_formatado = str(carona.horario_chegada)[:-3]
     context = {'usuario_id': usuario_id, 'carona':carona,'corridas':corridas,'horario_partida_formatado':horario_partida_formatado,'horario_chegada_formatado':horario_chegada_formatado}
     return render(request, 'condutor/edit_carona.html', context)
 

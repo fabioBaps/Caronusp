@@ -6,6 +6,7 @@ Passageiro
 
 {% block content %}
     <h1>Olá {{ user.first_name }} {{ user.last_name }}! Você está logado como passageiro</h1>
+    <h1>Ações</h1>
     <div class="grid">
         <a href="{% url 'passageiro:list-accepted' user.id 'accepted'%}">Minhas corridas</a>
         <p>Aqui você pode ver as corridas aceitas, solicitadas, rejeitadas e finalizadas</p>
@@ -16,4 +17,14 @@ Passageiro
         <a href="{% url 'accounts:afterlogin' user.id %}">Escolher ator</a>
         <p>Voltar para a tela de escolha de login</p>
     </div>
+    {% if notificacoes %}
+    <h1>Notificações</h1>
+        {% for notificacao in notificacoes %}
+            <div class="notificacao" >
+                <label class="flex"></label>
+                <p>{{ notificacao.texto }}</p>
+                <a href="{% url 'passageiro:read_notificacao' user.id notificacao.id %}">Marcar como lida</a>
+            </div>
+        {% endfor %}
+    {% endif %}
 {% endblock content %}

@@ -9,7 +9,7 @@ from .forms import MensagemForm
 def checa_login(request, usuario_id):
     user = request.user
     usuario = get_object_or_404(Usuario, pk=usuario_id)
-    if usuario.is_condutor and usuario.id == user.id:
+    if usuario.id == user.id:
         return True
     return False
 

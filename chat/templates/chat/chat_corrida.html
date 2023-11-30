@@ -3,13 +3,13 @@
 {% block content %}
     <h1>Chat da Corrida</h1>
     {% if type_actor == 1 %}
-    <a href="{% url  'passageiro:detail' user.id corrida.id %}"> Voltar </a>
+    <a class="voltar" href="{% url  'passageiro:initial' user.id %}"> Voltar </a>
     {% elif type_actor == 0 %} 
-    <a href="{% url 'condutor:detail_carona' user.id corrida.carona.id %}">Voltar</a>
+    <a class="voltar" href="{% url 'condutor:initial' user.id %}"> Voltar</a>
     {% endif %}
 
     {% for mensagem in mensagens %}
-        <p>{{ mensagem.usuario.first_name }} {{ mensagem.usuario.last_name }}: {{ mensagem.texto }}</p>
+        <p>{{ mensagem.usuario.first_name }} {{ mensagem.usuario.last_name }}: {{ mensagem.texto }} ({{mensagem.hora}})</p>
     {% endfor %}
 
     <form method="post" action="{% if corrida.id %}{% url 'chat:chat_corrida' user.id corrida.id type_actor %}{% endif %}">

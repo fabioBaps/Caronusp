@@ -14,9 +14,9 @@ Escolha de ator
 {% if user.is_passageiro %}
     <a class="flex" style="height: 25rem; width: 40rem" href="{% url 'passageiro:initial' user.id%}">Logar como passageiro</a>
 {% else %}
-    <form class="flex" style="height: 25rem; width: 40rem" method="post" action="{% url 'accounts:passageiro' user.id %}">
+    <form class="flex" method="post" action="{% url 'accounts:passageiro' user.id %}">
         {% csrf_token %}
-        <button type="submit">Cadastrar passageiro</button>
+        <button style="height: 25rem; width: 40rem" type="submit">Cadastrar passageiro</button>
     </form>
 {% endif %}
 </div>

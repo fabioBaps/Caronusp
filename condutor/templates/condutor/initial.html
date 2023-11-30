@@ -7,13 +7,27 @@ Condutor
 {% block content %}
 
 <h1>Olá {{ user.first_name }} {{ user.last_name }}! Você está logado como condutor</h1>
+<h1>Minhas caronas</h1>
+{% if caronas %}
+    {% for carona in caronas %}
+        <div class="flex2">
+            <p>Carona saindo de {{ carona.local_partida }} às {{carona.horario_partida}} para
+                {{ carona.local_chegada }} às {{carona.horario_chegada}}
+            </p>
+            <a href="{% url 'condutor:detail_carona' user.id carona.id %}">Ver detalhes</a>
+        </div>
+    {% endfor %}
+{% else %}
+    <p>Você não tem nenhuma carona ativa.</p>
+{% endif %}
+<h1>Ações</h1>
 <div class="grid">
-    <a href="{% url 'condutor:edit_perfil' user.id %}">Editar perfil</a>
-    <p>Editar suas informações pessoais</p>
-    <a href="{% url 'condutor:create_carona' user.id %}">Criar carona</a>
-    <p>Criar uma carona para ir e voltar até onde quiser</p>
     <a href="{% url 'condutor:list_corridas' user.id %}">Ver histórico de corridas</a>
     <p>Aqui você pode ver as suas corridas finalizadas</p>
+    <a href="{% url 'condutor:create_carona' user.id %}">Criar carona</a>
+    <p>Criar uma carona para ir e voltar até onde quiser</p>
+    <a href="{% url 'condutor:edit_perfil' user.id %}">Editar perfil</a>
+    <p>Editar suas informações pessoais</p>
     <a href="{% url 'accounts:afterlogin' user.id %}">Escolher ator</a>
     <p>Voltar para a tela de escolha de login</p>
 </div>
@@ -30,14 +44,5 @@ Condutor
     {% endfor %}
 {% endif %}
 
-<h1>Minhas caronas</h1>
-{% for carona in caronas %}
-    <div class="flex">
-        <p>Carona saindo de {{ carona.local_partida }} às {{carona.horario_partida}} para
-            {{ carona.local_chegada }} às {{carona.horario_chegada}}
-        </p>
-        <a href="{% url 'condutor:detail_carona' user.id carona.id %}">Ver detalhes</a>
-    </div>
-{% endfor %}
 
 {% endblock content %}

@@ -8,11 +8,11 @@ Editar perfil
 <h1>Atualizar dados do perfil</h1>
 <form method="post" enctype="multipart/form-data" action="{% url 'condutor:edit_perfil' usuario.id%}">
   {% csrf_token %}
-    {% comment %} <p>
+    <p>
         <label for="id_foto">Foto:</label>
         <img src="{{ usuario.foto.url }}" style="max-width: 450px; max-height: 300px">
-        <input type="file" name="foto" id="id_foto" />
-    </p> {% endcomment %}
+        <input type="file" name="foto" id="id_foto" value="{{usuario.foto.url}}"/>
+    </p>
     <p>
         <label for="id_username">Nome de usuário:</label>
         <input type="text" name="username" id="id_username" value="{{usuario.username}}" />
@@ -31,15 +31,15 @@ Editar perfil
     </p>
     <p>
         <label for="id_telefone">Telefone:</label>
-        <input type="number" name="telefone" id="id_telefone" value="{{usuario.telefone}}" />
+        <input maxlength=11 type="text" name="telefone" id="id_telefone" value="{{usuario.telefone}}" />
     </p>
     <p>
         <label for="id_RG">RG:</label>
-        <input type="text" name="RG" id="id_RG" value="{{usuario.RG}}" />
+        <input maxlength=9 type="text" name="RG" id="id_RG" value="{{usuario.RG}}" />
     </p>
     <p>
         <label for="id_CNH">CNH:</label>
-        <input type="text" name="CNH" id="id_CNH" value="{{condutor.CNH}}" />
+        <input maxlength=11 type="text" name="CNH" id="id_CNH" value="{{condutor.CNH}}" />
     </p>
 
     

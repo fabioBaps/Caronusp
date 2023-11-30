@@ -26,7 +26,8 @@ def UpdateView(request, usuario_id):
     user = request.user
     usuario = get_object_or_404(Usuario, pk=usuario_id)
     if request.method == "POST":
-        usuario.foto = request.FILES.get('foto')
+        if request.FILES.get('foto'):
+            usuario.foto = request.FILES.get('foto')
         usuario.username = request.POST['username']
         usuario.first_name = request.POST['first_name']
         usuario.last_name = request.POST['last_name']

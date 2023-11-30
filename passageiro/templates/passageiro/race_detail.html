@@ -20,11 +20,14 @@ Detalhes da corrida
   Placa: {{carona.placa_veiculo}}
   <br>
 </h3>
-{% if corrida.contains and corrida.ativa %} <a class="exit" href="{% url 'passageiro:leave' user.id corrida.id %}">Sair da corrida</a>
-{% endif %}
-<a class="voltar" onclick="history.back()">Voltar</a>
+<div class="flex2">
+  {% if corrida.contains and corrida.ativa %}
+  <a href="{% url 'chat:chat_corrida' user.id corrida.id 1 %}"> Chat </a>
+  <a class="exit" href="{% url 'passageiro:leave' user.id corrida.id %}">Sair da corrida</a>
+  {% endif %}
+  <a class="voltar" onclick="history.back()">Voltar</a>
+</div>
 {% endblock content %}
 
-<button><a href="{% url 'chat:chat_corrida' user.id corrida.id 1 %}"> Chat </a></button>
 
 
