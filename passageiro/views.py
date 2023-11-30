@@ -262,3 +262,15 @@ def read_notificacao(request, usuario_id, notificacao_id):
     else:
         return HttpResponseRedirect(
             reverse('accounts:afterlogin', args=(user.id, )))
+        
+@login_required
+def condutordetail(request, usuario_id, condutor_id):
+    user = request.user
+    usuario = get_object_or_404(Usuario, pk=usuario_id)
+    condutor = get_object_or_404(Condutor, pk=condutor_id)
+    if usuario.is_passageiro and usuario.id == user.id:
+        context = {'usuario': usuario, 'condutor': condutor}
+        return render(request, 'passageiro/detail_condutor.html', context)
+    else:
+        return HttpResponseRedirect(
+            reverse('accounts:afterlogin', args=(user.id, )))

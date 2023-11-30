@@ -19,4 +19,5 @@ urlpatterns = [
     path('<int:usuario_id>/corrida/<int:corrida_id>/rejeitar_passageiro_corrida/<int:passageiro_id>', views.rejeitar_passageiro_corrida, name='rejeitar_passageiro_corrida'),
     path('<int:usuario_id>/corrida/<int:corrida_id>/encerrar_corrida', views.encerrar_corrida, name='encerrar_corrida'),
     path('<int:usuario_id>/corrida/<int:corrida_id>/avalia_passageiro_individual/<int:passageiro_id>', views.avalia_passageiro_individual, name='avalia_passageiro_individual'),
+    path('<int:usuario_id>/passageirodetail/<int:passageiro_id>', views.passageirodetail, name='passageirodetail'),
 ]

@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Detalhes do condutor
+{% endblock %}
+
+{% block content %}
+<h1>Detalhes do condutor</h1>
+<p>Foto: <img src="{{ condutor.usuario.foto.url }}" style="max-width: 450px; max-height: 300px"></p>
+<p>Nome: {{ condutor.usuario.first_name }} {{ condutor.usuario.last_name }}</p>
+<p>Telefone: {{ condutor.usuario.telefone }}</p>
+<p>Nota: {{ condutor.nota_media }}</p>
+
+<a class="voltar" onclick="history.back()">Voltar</a>
+{% endblock %}

@@ -14,7 +14,7 @@ Condutor
             <p>Carona saindo de {{ carona.local_partida }} às {{carona.horario_partida}} para
                 {{ carona.local_chegada }} às {{carona.horario_chegada}}
             </p>
-            <a href="{% url 'condutor:detail_carona' user.id carona.id %}">Ver detalhes</a>
+            <a class="flex" href="{% url 'condutor:detail_carona' user.id carona.id %}">Ver detalhes</a>
         </div>
     {% endfor %}
 {% else %}
