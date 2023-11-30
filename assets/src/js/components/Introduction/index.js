@@ -2,7 +2,7 @@
 import React from 'react';
 
 const Introduction = () => {
-  return <p>Bem-vindo ao meu site! Este é um parágrafo de introdução.</p>;
+  return <p>Caronusp é um web service de caronas criado para conectar condutores e passageiros, conheça um pouco mais sobre suas funcionalidades!!!</p>;
 };
 
 export default Introduction;

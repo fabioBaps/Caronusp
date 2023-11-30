@@ -11,7 +11,7 @@ const Article = ({ title, content }) => {
   return (
     <div className="article">
       <button onClick={toggleArticle}>
-        {isOpen ? 'Fechar Artigo: ' : 'Abrir Artigo: '}
+        {isOpen ? 'Fechar Seção: ' : 'Ler Seção: '}
         {title}
       </button>
       {isOpen && <p>{content}</p>}
