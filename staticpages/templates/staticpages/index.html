@@ -11,5 +11,7 @@ A sua corrida diária!</h2>
 {% if user.is_authenticated %}
 <a href="{% url 'accounts:afterlogin' user.id%}">Login de condutor ou passageiro</a>
 {% endif %}
+<br>
+<a href="react/">Sobre</a>
 </div>
 {% endblock content %}
