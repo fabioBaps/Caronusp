@@ -334,4 +334,9 @@ def list_corridas(request, usuario_id):
     context = {"corrida_list": corrida_list}
     return render(request, 'condutor/list_corridas.html', context)
     
-
+@login_required
+def passageirodetail(request, usuario_id, passageiro_id):
+    if not checa_login(request, usuario_id): return HttpResponseRedirect(reverse('accounts:afterlogin', args=(request.user.id,)))
+    passageiro = get_object_or_404(Passageiro, pk=passageiro_id)
+    context = {'usuario_id': usuario_id, 'passageiro':passageiro}
+    return render(request, 'condutor/detail_passageiro.html', context)

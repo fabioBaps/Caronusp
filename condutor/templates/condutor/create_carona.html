@@ -10,27 +10,27 @@ Criar carona
   {% csrf_token %}
   <p>
     <label for="id_local_partida">Local de partida:</label>
-        <input type="text" name="local_partida" id="id_local_partida" />
+        <input type="text" name="local_partida" id="id_local_partida" required/>
       </p>
       <p>
         <label for="id_horario_partida">Horário de partida:</label>
-        <input type="time" name="horario_partida" id="id_horario_partida" />
+        <input type="time" name="horario_partida" id="id_horario_partida" required/>
     </p>
     <p>
       <label for="id_local_chegada">Local de chegada:</label>
-      <input type="text" name="local_chegada" id="id_local_chegada" />
+      <input type="text" name="local_chegada" id="id_local_chegada" required/>
     </p>
     <p>
       <label for="id_horario_chegada">Horário de chegada:</label>
-      <input type="time" name="horario_chegada" id="id_horario_chegada" />
+      <input type="time" name="horario_chegada" id="id_horario_chegada" required/>
     </p>
     <p>
       <label for="id_vagas">Vagas disponíveis no carro:</label>
-      <input type="number" name="vagas" id="id_vagas" />
+      <input type="number" name="vagas" id="id_vagas" required/>
     </p>
     <p>
       <label for="id_placa">placa do carro:</label>
-        <input maxlength='7'  type="text" name="placa" id="id_placa" />
+        <input maxlength='7'  type="text" name="placa" id="id_placa" required/>
     </p>
     <p>
         <label for="num_corridas">Número de corridas:</label>

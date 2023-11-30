@@ -21,6 +21,7 @@ Detalhes da corrida
   <br>
 </h3>
 <div class="flex2">
+  <a class="flex" href="{% url 'passageiro:condutordetail' user.id corrida.carona.condutor.id %}">Ver condutor</a>
   {% if corrida.contains and corrida.ativa %}
   <a href="{% url 'chat:chat_corrida' user.id corrida.id 1 %}"> Chat </a>
   <a class="exit" href="{% url 'passageiro:leave' user.id corrida.id %}">Sair da corrida</a>

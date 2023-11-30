@@ -10,19 +10,19 @@ Pesquisar
     {% csrf_token %}
     <p>
         <label for="id_dia">Dia:</label>
-        <input type="date" name="dia" id="id_dia" min="{% now "Y-m-d" %}" />
+        <input type="date" name="dia" id="id_dia" min="{% now "Y-m-d" %}" required/>
     </p>
     <p>
         <label for="id_local_partida">Local de partida:</label>
-        <input type="text" name="local_partida" id="id_local_partida" />
+        <input type="text" name="local_partida" id="id_local_partida" required/>
     </p>
     <p>
         <label for="id_local_chegada">Local de chegada:</label>
-        <input type="text" name="local_chegada" id="id_local_chegada" />
+        <input type="text" name="local_chegada" id="id_local_chegada" required/>
     </p>
     <p>
         <label for="id_horario_chegada">Horário de chegada:</label>
-        <input type="time" name="horario_chegada" id="id_horario_chegada" />
+        <input type="time" name="horario_chegada" id="id_horario_chegada" required/>
     </p>
     <button type="submit">Buscar</button>
 </form>
@@ -34,7 +34,7 @@ Pesquisar
 <section>
     {% for corrida in corrida_list %}
     <article class="flex">
-        <p> {{ corrida.dia }} saindo de {{ corrida.carona.local_partida }} ({{ corrida.carona.horario_partida }})
+        <p> Saindo de {{ corrida.carona.local_partida }} ({{ corrida.carona.horario_partida }})
             para {{ corrida.carona.local_chegada }} ({{ corrida.carona.horario_chegada }}) || Vagas: {{ corrida.vagas }}
         </p>
         <a href="{% url 'passageiro:detail' user.id corrida.id %}">Ver detalhes</a>
