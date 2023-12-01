@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'chat.apps.ChatConfig',
     'rest_framework',
     'webpack_loader',
+    'api.apps.ApiConfig',
 
 ]
 
